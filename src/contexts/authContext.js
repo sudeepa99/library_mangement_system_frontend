@@ -1,9 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { data } from "react-router-dom";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ Children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +16,7 @@ export const AuthProvider = ({ Children }) => {
             logout();
           } else {
             // const {data} = await getMe()
-            setUser(data);
+            // setUser(data);
           }
         } catch (error) {
           logout();
@@ -36,8 +35,8 @@ export const AuthProvider = ({ Children }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user", JSON.stringify(userData));
-    setUser(userData);
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
   const isAdmin = () => {
@@ -46,7 +45,7 @@ export const AuthProvider = ({ Children }) => {
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout, isAdmin }}>
-      {Children}
+      {children}
     </AuthContext.Provider>
   );
 };

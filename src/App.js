@@ -1,10 +1,11 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { AuthProvider } from "./contexts/authContext";
-import { Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import Login from "./pages/Login";
 const theme = createTheme({
-  pallete: {
+  palette: {
     primary: {
       main: "#1976d2",
     },
@@ -24,9 +25,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <Router>
+        <BrowserRouter>
           <Routes>
-            {/* <Route path="/login" element={<Login/>}/> */}
+            <Route path="/login" element={<Login />} />
             {/* <Route path="/register" element={<Register />} /> */}
 
             {/* <Route path="/" element={<PrivateRoute />}>
@@ -48,7 +49,7 @@ function App() {
             </Route> */}
             {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
-        </Router>
+        </BrowserRouter>
       </AuthProvider>
       <ToastContainer position="top-right" autoClose={5000} />
     </ThemeProvider>

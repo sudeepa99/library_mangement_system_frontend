@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -9,13 +9,30 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { authApi } from "../api/auth";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  // const { login: authLogin } = useAuth();
+  const { login: authLogin } = useAuth();
   const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { data } = await authApi.login({ email, password });
+      authLogin(data.token, data.user);
+      toast.success("Logged in Successfully");
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login Failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Container maxWidth="sm">
@@ -23,15 +40,15 @@ const Login = () => {
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Library Login
         </Typography>
-        <Box component="form" sx={{ mt: 3 }}>
+        <Box component="form" sx={{ mt: 3 }} onSubmit={handleSubmit}>
           <TextField
             label="Email"
             type="email"
             fullWidth
             margin="normal"
             variant="outlined"
-            // value={email}
-            // onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <TextField
@@ -39,9 +56,9 @@ const Login = () => {
             type="password"
             fullWidth
             margin="normal"
-            // variant="outlined"
-            // value={email}
-            // onChange={(e) => setEmail(e.target.value)}
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
           <Button

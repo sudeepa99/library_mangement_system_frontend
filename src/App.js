@@ -4,6 +4,7 @@ import { AuthProvider } from "./contexts/authContext";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 const theme = createTheme({
   palette: {
     primary: {
@@ -28,7 +29,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
-            {/* <Route path="/register" element={<Register />} /> */}
+            <Route path="/register" element={<Register />} />
 
             {/* <Route path="/" element={<PrivateRoute />}>
             <Route index element={<Home />} />

@@ -23,10 +23,11 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await authApi.login({ email, password });
-      authLogin(data.token, data.user);
+      const res = await authApi.login({ email, password });
+      console.log("Data", res);
+      authLogin(res.token, res.user);
       toast.success("Logged in Successfully");
-      navigate("/");
+      navigate("/admin/dashboard");
     } catch (error) {
       toast.error(error.response?.data?.message || "Login Failed");
     } finally {

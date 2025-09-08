@@ -23,7 +23,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("librarian");
   const [loading, setLoading] = useState(false);
-  const { login: authLogin } = useAuth();
+  // const { login: authLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -39,9 +39,9 @@ const Register = () => {
     }
     setLoading(true);
     try {
-      const { data } = await authApi.register({ name, email, password, role });
-      console.log("Data Passing", data);
-      authLogin(data.token, data.user);
+      const res = await authApi.register({ name, email, password, role });
+
+      // authLogin(res.token, res.user);
 
       toast.success("Account Created Successfully");
       navigate("/login");

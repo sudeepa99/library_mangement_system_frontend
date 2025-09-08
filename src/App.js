@@ -5,6 +5,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./routes/privateRoute";
+import AdminRoute from "./routes/adminRoute";
 const theme = createTheme({
   palette: {
     primary: {
@@ -31,23 +34,22 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            {/* <Route path="/" element={<PrivateRoute />}>
-            <Route index element={<Home />} />
-              <Route path="books" element={<Books />} />
-              <Route path="books/:id" element={<BookDetails />} />
-              <Route path="my-borrowings" element={<MyBorrowings />} />
-              
+            <Route path="/" element={<PrivateRoute />}>
+              {/* <Route index element={<Home />} /> */}
+              {/* <Route path="books" element={<Books />} /> */}
+              {/* <Route path="books/:id" element={<BookDetails />} /> */}
+              {/* <Route path="my-borrowings" element={<MyBorrowings />} /> */}
+
               <Route path="admin" element={<AdminRoute />}>
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="books/add" element={<AddBook />} />
-                <Route path="books/edit/:id" element={<EditBook />} />
-                <Route path="users" element={<Users />} />
-                <Route path="users/:id" element={<UserDetails />} />
-                <Route path="borrowings" element={<Borrowings />} />
-                <Route path="overdue-books" element={<OverdueBooks />} />
+                {/* <Route path="books/add" element={<AddBook />} /> */}
+                {/* <Route path="books/edit/:id" element={<EditBook />} /> */}
+                {/* <Route path="users" element={<Users />} /> */}
+                {/* <Route path="users/:id" element={<UserDetails />} /> */}
+                {/* <Route path="borrowings" element={<Borrowings />} /> */}
+                {/* <Route path="overdue-books" element={<OverdueBooks />} /> */}
               </Route>
-
-            </Route> */}
+            </Route>
             {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </BrowserRouter>

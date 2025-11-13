@@ -5,9 +5,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./routes/privateRoute";
 import AdminRoute from "./routes/adminRoute";
+import AdminDashboard from "./pages/AdminDashboard";
+import Dashboard from "./pages/Dashboard";
 const theme = createTheme({
   palette: {
     primary: {
@@ -35,13 +36,13 @@ function App() {
             <Route path="/register" element={<Register />} />
 
             <Route path="/" element={<PrivateRoute />}>
-              {/* <Route index element={<Home />} /> */}
+              <Route index element={<Dashboard />} />
               {/* <Route path="books" element={<Books />} /> */}
               {/* <Route path="books/:id" element={<BookDetails />} /> */}
               {/* <Route path="my-borrowings" element={<MyBorrowings />} /> */}
 
               <Route path="admin" element={<AdminRoute />}>
-                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="/admindashboard" element={<AdminDashboard />} />
                 {/* <Route path="books/add" element={<AddBook />} /> */}
                 {/* <Route path="books/edit/:id" element={<EditBook />} /> */}
                 {/* <Route path="users" element={<Users />} /> */}

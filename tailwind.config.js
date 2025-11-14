@@ -6,11 +6,12 @@ module.exports = {
       colors: {
         textColour: "#FAF5E9",
         greenColour: "#009B4D",
+        tangerineYellow: "#FFCC00",
+      },
+      fontFamily: {
+        robotoSlab: ['"Roboto Slab"', "serif"],
       },
     },
   },
   plugins: [],
-  fontFamily: {
-    robotoSlab: ['"Roboto Slab"', "serif"],
-  },
 };

@@ -9,6 +9,7 @@ import PrivateRoute from "./routes/privateRoute";
 import AdminRoute from "./routes/adminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import Dashboard from "./pages/Dashboard";
+
 const theme = createTheme({
   palette: {
     primary: {

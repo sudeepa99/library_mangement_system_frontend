@@ -33,15 +33,21 @@ const NavBar = () => {
         >
           About
         </Link>
-        <button className="hover:text-[#FFCC00] transition-colors cursor-pointer">
+        <Link
+          to="didYouKnow"
+          spy={true}
+          smooth={true}
+          offset={-70}
+          duration={500}
+          className="hover:text-[#FFCC00] transition-colors cursor-pointer"
+        >
           Did You Know?
-        </button>
+        </Link>
         <button className="hover:text-[#FFCC00] transition-colors cursor-pointer">
           Contact
         </button>
       </div>
 
-      {/* Login Button - Far Right */}
       <div className="ml-auto">
         <button className="bg-[#FFCC00] text-black px-6 py-2 rounded-md hover:bg-yellow-500 transition-colors font-semibold">
           Login

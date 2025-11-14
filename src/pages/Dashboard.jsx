@@ -2,6 +2,7 @@ import NavBar from "../components/NavBar";
 import backgroundImage from "../assets/47892948_logo_make_11_06_2023_141.jpg";
 import tipsIcon from "../assets/Gemini_Generated_Image_5gn81a5gn81a5gn8_upscayl_4x_high-fidelity-4x.jpg";
 import About from "../components/About";
+import DidYouKnow from "../components/DidYouKnow";
 
 const Dashboard = () => {
   return (
@@ -36,6 +37,9 @@ const Dashboard = () => {
       </div>
       <div id="about">
         <About />
+      </div>
+      <div id="didYouKnow">
+        <DidYouKnow />
       </div>
     </>
   );

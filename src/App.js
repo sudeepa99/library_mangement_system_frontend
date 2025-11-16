@@ -33,11 +33,11 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
             <Route path="/" element={<PrivateRoute />}>
-              <Route index element={<Dashboard />} />
               {/* <Route path="books" element={<Books />} /> */}
               {/* <Route path="books/:id" element={<BookDetails />} /> */}
               {/* <Route path="my-borrowings" element={<MyBorrowings />} /> */}

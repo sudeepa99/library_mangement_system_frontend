@@ -39,11 +39,11 @@ const DidYouKnow = () => {
     },
   ];
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8 mx-[4%]">
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8 mx-[4%] pt-[5%]">
       {knowledgeCards.map((card) => (
         <div
           key={card.id}
-          className="rounded-xl shadow-lg hover:shadow-xl transition-all duration-400 overflow-hidden hover:translate-y-[-2%] "
+          className="rounded-xl shadow-lg hover:shadow-xl transition-all duration-250 overflow-hidden hover:translate-y-[-2%] "
         >
           <img
             src={card.image}

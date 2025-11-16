@@ -3,6 +3,7 @@ import backgroundImage from "../assets/47892948_logo_make_11_06_2023_141.jpg";
 import tipsIcon from "../assets/Gemini_Generated_Image_5gn81a5gn81a5gn8_upscayl_4x_high-fidelity-4x.jpg";
 import About from "../components/About";
 import DidYouKnow from "../components/DidYouKnow";
+import Contact from "../components/Contact";
 
 const Dashboard = () => {
   return (
@@ -23,14 +24,13 @@ const Dashboard = () => {
           <div className="group relative">
             <img
               src={tipsIcon}
-              className="h-14 w-14 rounded-full cursor-pointer border-2 border-white shadow-lg"
+              className="h-14 w-14 rounded-full cursor-pointer shadow-lg"
               alt="Tips"
             />
             <div className="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
               <div className="bg-green-600 text-white text-sm px-4 py-2 w-48 rounded-md shadow-lg">
                 Open a book, open your mind.
               </div>
-              <div className="absolute top-full right-4 -mt-1 border-4 border-transparent border-t-green-600"></div>
             </div>
           </div>
         </div>
@@ -40,6 +40,9 @@ const Dashboard = () => {
       </div>
       <div id="didYouKnow">
         <DidYouKnow />
+      </div>
+      <div id="contact">
+        <Contact />
       </div>
     </>
   );

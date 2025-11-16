@@ -1,6 +1,6 @@
 const About = () => {
   return (
-    <div className="font-robotoSlab bg-textColour px-[4%] pt-[5%] pb-[5%] ">
+    <div className="font-robotoSlab bg-textColour px-[4%] pt-[5%] ">
       <h1 className="text-5xl text-center mb-[2%]">
         <span>Your</span>
         {", "}

@@ -1,7 +1,10 @@
 import { Link } from "react-scroll";
+import { useNavigate } from "react-router-dom";
+
 import logo from "../assets/logo Readify.png";
 
 const NavBar = () => {
+  const navigate = useNavigate();
   return (
     <div className="backdrop-blur-sm bg-black/30 fixed w-full flex flex-row items-center justify-between px-[4%] py-[0.3%] text-textColour font-robotoSlab">
       <div className="navbar-logo-container">
@@ -43,13 +46,23 @@ const NavBar = () => {
         >
           Did You Know?
         </Link>
-        <button className="hover:text-[#FFCC00] transition-colors cursor-pointer">
+        <Link
+          to="contact"
+          spy={true}
+          smooth={true}
+          duration={500}
+          offset={-70}
+          className="hover:text-[#FFCC00] transition-colors cursor-pointer"
+        >
           Contact
-        </button>
+        </Link>
       </div>
 
       <div className="ml-auto">
-        <button className="bg-[#FFCC00] text-black px-6 py-2 rounded-md hover:bg-yellow-500 transition-colors font-semibold">
+        <button
+          className="bg-[#FFCC00] text-black px-6 py-2 rounded-md hover:bg-yellow-500 transition-colors font-semibold"
+          onClick={() => navigate("/login")}
+        >
           Login
         </button>
       </div>

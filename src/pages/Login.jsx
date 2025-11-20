@@ -9,8 +9,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import { authApi } from "../api/auth";
 import { toast } from "react-toastify";
+import { green } from "@mui/material/colors";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -78,6 +81,17 @@ const Login = () => {
             </Button>
           </Typography>
         </Box>
+        <Button
+          type="submit"
+          variant="text"
+          fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          disabled={loading}
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate("/")}
+        >
+          Back to Home
+        </Button>
       </Paper>
     </Container>
   );

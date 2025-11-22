@@ -42,8 +42,8 @@ function App() {
               {/* <Route path="books/:id" element={<BookDetails />} /> */}
               {/* <Route path="my-borrowings" element={<MyBorrowings />} /> */}
 
-              <Route path="admin" element={<AdminRoute />}>
-                <Route path="/admindashboard" element={<AdminDashboard />} />
+              <Route path="/admin" element={<AdminRoute />}>
+                <Route path="dashboard" element={<AdminDashboard />} />
                 {/* <Route path="books/add" element={<AddBook />} /> */}
                 {/* <Route path="books/edit/:id" element={<EditBook />} /> */}
                 {/* <Route path="users" element={<Users />} /> */}

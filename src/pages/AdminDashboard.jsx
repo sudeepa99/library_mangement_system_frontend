@@ -1,12 +1,18 @@
 import { useState } from "react";
 import Header from "../components/Header";
+import SideBar from "../components/Sidebar";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   return (
-    <div className="bg-[#FFFFFF] min-h-screen ">
-      <div className="px-[5%] py-[2%]">
+    <div className="bg-[#FFFFFF] min-h-screen flex flex-col ">
+      <div className="px-[5%] py-[2%] ">
         <Header />
+      </div>
+      <div className=" flex flex-1 px-[5%]">
+        <div>
+          <SideBar />
+        </div>
       </div>
     </div>
   );

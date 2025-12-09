@@ -17,11 +17,8 @@ const SideBar = () => {
     { name: "Reports & Analytics", icon: reportsIcon },
   ];
   return (
-    <div className="bg-yellow-100 shadow-md h-screen w-64  left-0 top-0 py-[4%]">
-      <div className="px-8 py-2">
-        <p className="text-2xl font-bold text-gray-800 mb-6">Sidebar</p>
-      </div>
-      <div className="flex flex-col space-y-2 px-4">
+    <div className="w-64">
+      <div className="flex flex-col space-y-2 px-4 py-4">
         {menuItems.map((item, index) => {
           return (
             <button

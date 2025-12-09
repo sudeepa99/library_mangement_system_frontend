@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/authContext";
 const Header = () => {
   const { user } = useAuth();
   return (
-    <div className="grid grid-cols-3 items-start px-6 py-4 bg-yellow-100 shadow-md">
+    <div className="grid grid-cols-3 items-start px-6 py-4  shadow-md min-w-fit">
       <div className="flex items-center">
         <img
           src={logo}
@@ -20,7 +20,7 @@ const Header = () => {
         </div>
         <div className="flex items-center justify-center gap-2 mt-1">
           <span className="text-sm text-gray-500">Role:</span>
-          <span className="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+          <span className="px-3 py-1 text-xs font-medium bg-green-100 hover:bg-green-300 text-green-800 rounded-full">
             {user?.role}
           </span>
         </div>

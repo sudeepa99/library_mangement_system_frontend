@@ -1,9 +1,12 @@
 import AdminLayout from "../components/AdminLayout";
+import BookManagementContent from "../components/BookManagementContent";
 
 const BookManagement = () => {
   return (
     <div>
-      <AdminLayout></AdminLayout>
+      <AdminLayout>
+        <BookManagementContent />
+      </AdminLayout>
     </div>
   );
 };

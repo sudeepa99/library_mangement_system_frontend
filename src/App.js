@@ -9,6 +9,7 @@ import PrivateRoute from "./routes/privateRoute";
 import AdminRoute from "./routes/adminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import Dashboard from "./pages/Dashboard";
+import BookManagement from "./pages/BookManagement";
 
 const theme = createTheme({
   palette: {
@@ -44,6 +45,7 @@ function App() {
 
               <Route path="/admin" element={<AdminRoute />}>
                 <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="books" element={<BookManagement />} />
                 {/* <Route path="books/add" element={<AddBook />} /> */}
                 {/* <Route path="books/edit/:id" element={<EditBook />} /> */}
                 {/* <Route path="users" element={<Users />} /> */}

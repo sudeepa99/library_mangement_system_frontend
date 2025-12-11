@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "../assets/icons/circle-x.png";
 
 const DialogBox = ({
@@ -9,13 +9,11 @@ const DialogBox = ({
   onSubmit,
   error,
   isLoading = false,
+  initialData = null,
 }) => {
-  // Don't render if not open
-
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
 
-  // Form state
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -27,7 +25,23 @@ const DialogBox = ({
     availableCopies: "",
   });
 
-  // Handle input changes
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    } else {
+      setFormData({
+        title: "",
+        author: "",
+        isbn: "",
+        category: "",
+        publishedYear: "",
+        publisher: "",
+        numberOfCopies: "",
+        availableCopies: "",
+      });
+    }
+  }, [initialData, isOpen]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -36,16 +50,13 @@ const DialogBox = ({
     }));
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
   };
 
-  // Handle cancel/close
   const handleCancel = () => {
     onClose();
-    // Optionally reset form
     setFormData({
       title: "",
       author: "",
@@ -63,7 +74,6 @@ const DialogBox = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Dialog Header */}
         <div className="flex justify-between items-center p-6 border-b">
           <h1 className="text-2xl font-bold text-gray-800">{DialogTitle}</h1>
           <button
@@ -81,10 +91,8 @@ const DialogBox = ({
           </div>
         )}
 
-        {/* Dialog Body - Form */}
         <form onSubmit={handleSubmit} className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Title */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Title *
@@ -100,7 +108,6 @@ const DialogBox = ({
               />
             </div>
 
-            {/* Author */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Author *
@@ -116,7 +123,6 @@ const DialogBox = ({
               />
             </div>
 
-            {/* ISBN */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 ISBN
@@ -131,7 +137,6 @@ const DialogBox = ({
               />
             </div>
 
-            {/* Category */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Category
@@ -153,7 +158,6 @@ const DialogBox = ({
               </select>
             </div>
 
-            {/* Published Year */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Published Year
@@ -174,7 +178,6 @@ const DialogBox = ({
               </select>
             </div>
 
-            {/* Publisher */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Publisher
@@ -189,7 +192,6 @@ const DialogBox = ({
               />
             </div>
 
-            {/* Number of Copies */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Number of Copies *
@@ -206,7 +208,6 @@ const DialogBox = ({
               />
             </div>
 
-            {/* Available Copies */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Available Copies *
@@ -225,7 +226,6 @@ const DialogBox = ({
             </div>
           </div>
 
-          {/* Dialog Footer - Buttons */}
           <div className="flex justify-end gap-4 mt-8 pt-6 border-t">
             <button
               type="button"

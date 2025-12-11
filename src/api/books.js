@@ -17,7 +17,7 @@ export const bookApi = {
       throw error;
     }
   },
-  updateBook: async (data, id) => {
+  updateBook: async (id, data) => {
     try {
       const response = await api.put(`/books/${id}`, data);
       return response.data;
@@ -25,7 +25,7 @@ export const bookApi = {
       throw error;
     }
   },
-  deleteBook: async (data, id) => {
+  deleteBook: async (id, data) => {
     try {
       const response = await api.delete(`/books/${id}`, data);
       return response.data;

@@ -11,15 +11,21 @@ import deleteIcon from "../assets/icons/trash.png";
 import editIcon from "../assets/icons/pencil.png";
 import AddBook from "./AddBook";
 import { bookApi } from "../api/books";
+import EditBook from "./EditBook";
+import DeleteBook from "./DeleteBook";
+import { toast } from "react-toastify";
 
 const BookManagementContent = () => {
   const [expanded, setExpanded] = useState({});
   const [isAddBookDialogOpen, setIsAddBookDialogOpen] = useState(false);
+  const [isEditBookDialogOpen, setIsEditBookDialogOpen] = useState(false);
+  const [isDeleteBookDialogOpen, setIsDeleteBookDialogOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch books on component mount
   useEffect(() => {
     fetchBooks();
   }, []);
@@ -37,6 +43,48 @@ const BookManagementContent = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEditBook = (book) => {
+    setSelectedBook(book);
+    setIsEditBookDialogOpen(true);
+  };
+
+  const handleCloseEditBookDialog = () => {
+    setIsEditBookDialogOpen(false);
+    setSelectedBook(null);
+  };
+
+  const handleDeleteClick = (book) => {
+    setSelectedBook(book);
+    setIsDeleteBookDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedBook?._id) return;
+
+    setDeleteLoading(true);
+    try {
+      await bookApi.deleteBook(selectedBook._id);
+
+      setIsDeleteBookDialogOpen(false);
+      setSelectedBook(null);
+
+      fetchBooks();
+
+      toast.success("Book deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting book:", err);
+      alert("Failed to delete book. Please try again.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteBookDialogOpen(false);
+    setSelectedBook(null);
+    setDeleteLoading(false);
   };
 
   const tableData = useMemo(() => {
@@ -82,10 +130,6 @@ const BookManagementContent = () => {
         accessorKey: "Copies",
         header: "Total Copies",
       },
-      // {
-      //   accessorKey: "AvailableCopies",
-      //   header: "Available",
-      // },
       {
         accessorKey: "PublishedYear",
         header: "Published Year",
@@ -125,7 +169,6 @@ const BookManagementContent = () => {
     enableExpanding: true,
   });
 
-  // Format date for display
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -135,37 +178,14 @@ const BookManagementContent = () => {
     });
   };
 
-  // Handle book deletion
-  const handleDeleteBook = async (bookId) => {
-    if (window.confirm("Are you sure you want to delete this book?")) {
-      try {
-        await bookApi.deleteBook(bookId);
-        // Refresh the book list
-        fetchBooks();
-      } catch (err) {
-        console.error("Error deleting book:", err);
-        alert("Failed to delete book. Please try again.");
-      }
-    }
-  };
-
-  // Handle book edit (you'll need to implement this)
-  const handleEditBook = (book) => {
-    console.log("Edit book:", book);
-    // You can implement edit functionality here
-  };
-
-  // Function to open the dialog
   const handleOpenAddBookDialog = () => {
     setIsAddBookDialogOpen(true);
   };
 
-  // Function to close the dialog
   const handleCloseAddBookDialog = () => {
     setIsAddBookDialogOpen(false);
   };
 
-  // Render loading state
   if (loading) {
     return (
       <div className="px-[4%] py-[2%] flex justify-center items-center h-64">
@@ -177,7 +197,6 @@ const BookManagementContent = () => {
     );
   }
 
-  // Render error state
   if (error) {
     return (
       <div className="px-[4%] py-[2%]">
@@ -192,15 +211,6 @@ const BookManagementContent = () => {
             </button>
           </div>
         </div>
-        {/* <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-600">{error}</p>
-          <button
-            onClick={fetchBooks}
-            className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-          >
-            Retry
-          </button>
-        </div> */}
       </div>
     );
   }
@@ -348,7 +358,7 @@ const BookManagementContent = () => {
                                 />
                               </button>
                               <button
-                                onClick={() => handleDeleteBook(book._id)}
+                                onClick={() => handleDeleteClick(book)}
                                 className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
                                 title="Delete Book"
                               >
@@ -371,11 +381,25 @@ const BookManagementContent = () => {
         )}
       </div>
 
-      {/* Add Book Dialog */}
       <AddBook
         isOpen={isAddBookDialogOpen}
         onClose={handleCloseAddBookDialog}
         refreshBooks={fetchBooks}
+      />
+
+      <EditBook
+        isOpen={isEditBookDialogOpen}
+        onClose={handleCloseEditBookDialog}
+        bookData={selectedBook}
+        refreshBooks={fetchBooks}
+      />
+
+      <DeleteBook
+        isOpen={isDeleteBookDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        bookData={selectedBook}
+        onConfirm={handleDeleteConfirm}
+        isLoading={deleteLoading}
       />
     </div>
   );

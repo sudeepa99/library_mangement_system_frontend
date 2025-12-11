@@ -11,26 +11,22 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
     setError(null);
 
     try {
-      // Transform form data to match API request body
       const bookData = {
         title: formData.title,
         author: formData.author,
-        isbn: formData.isbn || "", // Optional field
+        isbn: formData.isbn || "",
         category: formData.category,
         publishedYear: parseInt(formData.publishedYear) || null,
-        publisher: formData.publisher || "", // Optional field
+        publisher: formData.publisher || "",
         copies: parseInt(formData.numberOfCopies),
         availableCopies: parseInt(formData.availableCopies),
       };
 
-      // Make API call
       const response = await bookApi.addBook(bookData);
       console.log("Book added successfully:", response);
 
-      // Close dialog
       onClose();
 
-      // Refresh book list if callback provided
       if (refreshBooks) {
         refreshBooks();
       }

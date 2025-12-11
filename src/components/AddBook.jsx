@@ -1,14 +1,58 @@
+import { useState } from "react";
 import DialogBox from "./DialogBox";
+import { bookApi } from "../api/books";
 
-const AddBook = ({ isOpen, onClose, onSubmit }) => {
+const AddBook = ({ isOpen, onClose, refreshBooks }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (formData) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Transform form data to match API request body
+      const bookData = {
+        title: formData.title,
+        author: formData.author,
+        isbn: formData.isbn || "", // Optional field
+        category: formData.category,
+        publishedYear: parseInt(formData.publishedYear) || null,
+        publisher: formData.publisher || "", // Optional field
+        copies: parseInt(formData.numberOfCopies),
+        availableCopies: parseInt(formData.availableCopies),
+      };
+
+      // Make API call
+      const response = await bookApi.addBook(bookData);
+      console.log("Book added successfully:", response);
+
+      // Close dialog
+      onClose();
+
+      // Refresh book list if callback provided
+      if (refreshBooks) {
+        refreshBooks();
+      }
+    } catch (err) {
+      console.error("Error adding book:", err);
+      setError(
+        err.response?.data?.message || "Failed to add book. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div>
       <DialogBox
         DialogTitle="Add Book"
-        submitButtonName="Add"
+        submitButtonName={isLoading ? "Adding..." : "Add"}
         isOpen={isOpen}
         onClose={onClose}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
+        error={error}
+        isLoading={isLoading}
       />
     </div>
   );

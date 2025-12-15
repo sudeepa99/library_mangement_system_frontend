@@ -81,6 +81,7 @@ const SideBar = () => {
                 src={item.icon}
                 className={`h-5 w-5 
                 ${activeTab === item.name ? "filter invert" : ""}`}
+                alt="sidebar_icon"
               />
               <span>{item.name}</span>
             </button>

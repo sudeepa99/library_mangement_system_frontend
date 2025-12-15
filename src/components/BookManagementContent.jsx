@@ -89,7 +89,7 @@ const BookManagementContent = () => {
 
   const tableData = useMemo(() => {
     return books.map((book) => ({
-      ID: book._id,
+      // ID: book._id,
       Title: book.title,
       Author: book.author,
       Category: book.category,
@@ -106,14 +106,10 @@ const BookManagementContent = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "ID",
-        header: "ID",
-        cell: ({ row }) => (
-          <span className="truncate max-w-[100px] inline-block">
-            {row.original.ID.substring(0, 8)}...
-          </span>
-        ),
+        accessorKey: "ISBN",
+        header: "ISBN",
       },
+
       {
         accessorKey: "Title",
         header: "Title",
@@ -290,14 +286,14 @@ const BookManagementContent = () => {
                         <td colSpan={columns.length} className="px-4 py-4">
                           <div className="flex justify-between items-center">
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
-                              <div>
+                              {/* <div>
                                 <p className="text-sm text-gray-500 font-medium">
                                   ISBN
                                 </p>
                                 <p className="text-lg font-semibold">
                                   {book.isbn || "N/A"}
                                 </p>
-                              </div>
+                              </div> */}
 
                               <div>
                                 <p className="text-sm text-gray-500 font-medium">

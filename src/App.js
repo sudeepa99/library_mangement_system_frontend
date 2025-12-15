@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Dashboard from "./pages/Dashboard";
 import BookManagement from "./pages/BookManagement";
 import Borrowing from "./pages/Borrowing";
+import UserManagement from "./pages/UserManagement";
 
 const theme = createTheme({
   palette: {
@@ -48,7 +49,7 @@ function App() {
                 <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="books" element={<BookManagement />} />
                 <Route path="borrowings" element={<Borrowing />} />
-                {/* <Route path="users" element={<Users />} /> */}
+                <Route path="users" element={<UserManagement />} />
                 {/* <Route path="users/:id" element={<UserDetails />} /> */}
                 {/* <Route path="borrowings" element={<Borrowings />} /> */}
                 {/* <Route path="overdue-books" element={<OverdueBooks />} /> */}

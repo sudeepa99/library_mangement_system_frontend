@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import BookManagement from "./pages/BookManagement";
 import Borrowing from "./pages/Borrowing";
 import UserManagement from "./pages/UserManagement";
+import Reports from "./pages/Reports";
 
 const theme = createTheme({
   palette: {
@@ -50,6 +51,8 @@ function App() {
                 <Route path="books" element={<BookManagement />} />
                 <Route path="borrowings" element={<Borrowing />} />
                 <Route path="users" element={<UserManagement />} />
+                <Route path="reports" element={<Reports />} />
+
                 {/* <Route path="users/:id" element={<UserDetails />} /> */}
                 {/* <Route path="borrowings" element={<Borrowings />} /> */}
                 {/* <Route path="overdue-books" element={<OverdueBooks />} /> */}

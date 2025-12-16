@@ -84,7 +84,7 @@ const EditUser = ({ isOpen, onClose, userData, refreshUsers }) => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name *
+                Name
               </label>
               <input
                 type="text"
@@ -120,19 +120,6 @@ const EditUser = ({ isOpen, onClose, userData, refreshUsers }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Role
               </label>
               <select
@@ -141,26 +128,8 @@ const EditUser = ({ isOpen, onClose, userData, refreshUsers }) => {
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md"
               >
-                <option value="student">Student</option>
-                <option value="faculty">Faculty</option>
                 <option value="librarian">Librarian</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status
-              </label>
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              >
-                <option value="Active">Active</option>
-                <option value="Suspended">Suspended</option>
-                <option value="Inactive">Inactive</option>
+                <option value="member">Member</option>
               </select>
             </div>
           </div>

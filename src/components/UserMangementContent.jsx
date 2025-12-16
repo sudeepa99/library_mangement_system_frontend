@@ -235,7 +235,6 @@ const UserManagementContent = () => {
         </div>
       </div>
 
-      {/* Search Bar */}
       <div className="mt-6 bg-white p-4 rounded-lg shadow border">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
@@ -316,7 +315,7 @@ const UserManagementContent = () => {
                                 <p className="text-sm text-gray-500 font-medium">
                                   User ID
                                 </p>
-                                <p className="text-sm font-mono text-gray-700">
+                                <p className="text-lg font-semibold">
                                   {user._id?.substring(0, 8)}...
                                 </p>
                               </div>

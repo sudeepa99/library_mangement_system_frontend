@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import dashboardIcon from "../assets/icons/house.png";
 import booksIcon from "../assets/icons/book-open-check.png";
@@ -13,52 +13,70 @@ import { toast } from "react-toastify";
 const SideBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [activeTab, setActiveTab] = useState("");
+  const [userRole, setUserRole] = useState(null);
 
-  const getActiveTabFromRoute = () => {
-    const path = location.pathname;
-    if (path === "/admin/dashboard") return "Dashboard";
-    if (path === "/admin/books") return "Books Management";
-    if (path === "/admin/borrowings") return "Borrowings & Returns";
-    if (path === "/admin/categories") return "Categories";
-    if (path === "/admin/users") return "Users Management";
-    if (path === "/admin/reports") return "Reports & Analytics";
-    return "Dashboard";
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await authApi.getMe();
+        setUserRole(res.data.role);
+        setActiveTab(getActiveTabFromRoute(location.pathname, res.data.role));
+      } catch {
+        setUserRole(null);
+      }
+    };
+
+    fetchUser();
+  }, [location.pathname]);
+
+  const getActiveTabFromRoute = (path, role) => {
+    if (role === "member") {
+      if (path === "/member/catalogue") return "Catalogue";
+      if (path === "/member/borrowings") return "My Borrowings";
+      if (path === "/member/history") return "History";
+    } else {
+      if (path === "/admin/dashboard") return "Dashboard";
+      if (path === "/admin/books") return "Books Management";
+      if (path === "/admin/borrowings") return "Borrowings & Returns";
+      if (path === "/admin/categories") return "Categories";
+      if (path === "/admin/users") return "Users Management";
+      if (path === "/admin/reports") return "Reports & Analytics";
+    }
+    return "";
   };
 
-  const [activeTab, setActiveTab] = useState(getActiveTabFromRoute());
-
-  const menuItems = [
-    {
-      name: "Dashboard",
-      icon: dashboardIcon,
-      path: "/admin/dashboard",
-    },
-    {
-      name: "Books Management",
-      icon: booksIcon,
-      path: "/admin/books",
-    },
-    {
-      name: "Borrowings & Returns",
-      icon: borrowingIcon,
-      path: "/admin/borrowings",
-    },
-    {
-      name: "Categories",
-      icon: categoriesIcon,
-      path: "/admin/categories",
-    },
-    {
-      name: "Users Management",
-      icon: userMngIcon,
-      path: "/admin/users",
-    },
-    {
-      name: "Reports & Analytics",
-      icon: reportsIcon,
-      path: "/admin/reports",
-    },
-  ];
+  const menuItems =
+    userRole === "member"
+      ? [
+          { name: "Catalogue", path: "/member/catalogue", icon: dashboardIcon },
+          {
+            name: "My Borrowings",
+            path: "/member/borrowings",
+            icon: borrowingIcon,
+          },
+          { name: "History", path: "/member/history", icon: reportsIcon },
+        ]
+      : [
+          { name: "Dashboard", path: "/admin/dashboard", icon: dashboardIcon },
+          { name: "Books Management", path: "/admin/books", icon: booksIcon },
+          {
+            name: "Borrowings & Returns",
+            path: "/admin/borrowings",
+            icon: borrowingIcon,
+          },
+          {
+            name: "Categories",
+            path: "/admin/categories",
+            icon: categoriesIcon,
+          },
+          { name: "Users Management", path: "/admin/users", icon: userMngIcon },
+          {
+            name: "Reports & Analytics",
+            path: "/admin/reports",
+            icon: reportsIcon,
+          },
+        ];
 
   const handleNavigation = (item) => {
     setActiveTab(item.name);

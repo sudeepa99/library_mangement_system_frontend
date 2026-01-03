@@ -2,9 +2,25 @@ import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo Readify.png";
+import { useEffect, useState } from "react";
+import { authApi } from "../api/auth";
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await authApi.getMe();
+        setIsLoggedIn(true);
+      } catch {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
   return (
     <div className="backdrop-blur-sm bg-black/30 fixed w-full flex flex-row items-center justify-between px-[4%] py-[0.3%] text-textColour font-robotoSlab">
       <div className="navbar-logo-container">
@@ -57,15 +73,16 @@ const NavBar = () => {
           Contact
         </Link>
       </div>
-
-      <div className="ml-auto">
-        <button
-          className="bg-[#FFCC00] text-black px-6 py-2 rounded-md hover:bg-yellow-500 transition-colors font-semibold"
-          onClick={() => navigate("/login")}
-        >
-          Login
-        </button>
-      </div>
+      {!isLoggedIn && (
+        <div className="ml-auto">
+          <button
+            className="bg-[#FFCC00] text-black px-6 py-2 rounded-md hover:bg-yellow-500 transition-colors font-semibold"
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </button>
+        </div>
+      )}
     </div>
   );
 };

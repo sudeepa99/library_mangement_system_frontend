@@ -18,4 +18,12 @@ export const authApi = {
       throw error;
     }
   },
+  logout: async () => {
+    try {
+      const response = await api.post("/auth/logout");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

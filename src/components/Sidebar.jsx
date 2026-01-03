@@ -7,6 +7,9 @@ import categoriesIcon from "../assets/icons/tag.png";
 import userMngIcon from "../assets/icons/users.png";
 import reportsIcon from "../assets/icons/chart-no-axes-column.png";
 import { useLocation, useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
+import { authApi } from "../api/auth";
+import { toast } from "react-toastify";
 const SideBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -62,6 +65,17 @@ const SideBar = () => {
     navigate(item.path);
   };
 
+  const handleLogout = async () => {
+    try {
+      const response = await authApi.logout();
+      toast.success(response.message || "Logged out successfully");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+      toast.error("Logout failed. Please try again.");
+    }
+  };
+
   return (
     <div className="w-64">
       <div className="flex flex-col space-y-2 px-4 py-4">
@@ -87,6 +101,15 @@ const SideBar = () => {
             </button>
           );
         })}
+      </div>
+      <div className="px-4 py-4 border-t">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+        >
+          <LogOut className="h-5 w-5" />
+          <span>Logout</span>
+        </button>
       </div>
     </div>
   );

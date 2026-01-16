@@ -7,12 +7,6 @@ const BorrowingContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  //   const tabs = [
-  //     { id: "active", label: "Active Borrowings" },
-  //     { id: "overdue", label: "Overdue" },
-  //     { id: "returned", label: "Returned" },
-  //   ];
-
   useEffect(() => {
     fetchBorrowings();
   }, []);
@@ -20,7 +14,7 @@ const BorrowingContent = () => {
   const fetchBorrowings = async () => {
     try {
       setLoading(true);
-      const response = await borrowingApi.getBorrowings(); // Your API endpoint
+      const response = await borrowingApi.getBorrowings();
       setBorrowings(response.data);
       setError(null);
     } catch (err) {
@@ -31,13 +25,11 @@ const BorrowingContent = () => {
     }
   };
 
-  // Filter borrowings based on active tab
   const filteredBorrowings = borrowings.filter((borrowing) => {
     switch (activeTab) {
       case "active":
         return borrowing.status === "Borrowed" || borrowing.status === "Active";
       case "overdue":
-        // Check if due date has passed
         return (
           new Date(borrowing.dueDate) < new Date() &&
           (borrowing.status === "Borrowed" || borrowing.status === "Active")
@@ -49,7 +41,6 @@ const BorrowingContent = () => {
     }
   });
 
-  // Calculate overdue days
   const calculateOverdueDays = (dueDate) => {
     const today = new Date();
     const due = new Date(dueDate);
@@ -58,13 +49,11 @@ const BorrowingContent = () => {
     return diffDays > 0 ? diffDays : 0;
   };
 
-  // Calculate fine (example: $1 per day overdue)
   const calculateFine = (dueDate) => {
     const overdueDays = calculateOverdueDays(dueDate);
     return overdueDays * 1; // $1 per day
   };
 
-  // Format date for display
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -90,7 +79,6 @@ const BorrowingContent = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              {/* Dynamic headers based on active tab */}
               {activeTab === "active" && (
                 <>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -350,7 +338,6 @@ const BorrowingContent = () => {
         </button>
       </div>
 
-      {/* Table */}
       {renderTable()}
     </div>
   );

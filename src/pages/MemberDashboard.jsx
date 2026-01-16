@@ -1,8 +1,11 @@
+import AdminLayout from "../components/AdminLayout";
+import MemberDashboardContent from "../components/MemberDashboardContent";
+
 const MemberDashboard = () => {
   return (
-    <diV>
-      <div></div>
-    </diV>
+    <AdminLayout>
+      <MemberDashboardContent />
+    </AdminLayout>
   );
 };
 

@@ -13,7 +13,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { authApi } from "../api/auth";
 import { toast } from "react-toastify";
-import { green } from "@mui/material/colors";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -32,7 +31,7 @@ const Login = () => {
       toast.success("Logged in Successfully");
 
       if (res.user.role === "member") {
-        navigate("/");
+        navigate("/member/dashboard");
       } else if (res.user.role === "librarian") {
         navigate("/admin/dashboard");
       } else {
@@ -90,13 +89,30 @@ const Login = () => {
           </Typography>
         </Box>
         <Button
-          type="submit"
+          type="button"
           variant="text"
           fullWidth
           sx={{ mt: 3, mb: 2 }}
           disabled={loading}
           startIcon={<ArrowBackIcon />}
-          onClick={() => navigate("/")}
+          // onClick={() => navigate("/")}
+          onClick={() => {
+            console.log("=== Back to Home Clicked ===");
+            console.log(
+              "1. Before navigate - Current path:",
+              window.location.pathname
+            );
+            console.log("2. localStorage state:", {
+              token: localStorage.getItem("token"),
+              user: localStorage.getItem("user"),
+            });
+
+            // Use a different approach
+            window.location.href = "/"; // Try direct navigation first
+
+            // If that works, then use:
+            // navigate("/", { replace: true });
+          }}
         >
           Back to Home
         </Button>

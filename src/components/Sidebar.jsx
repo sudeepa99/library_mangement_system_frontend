@@ -87,6 +87,7 @@ const SideBar = () => {
     try {
       const response = await authApi.logout();
       toast.success(response.message || "Logged out successfully");
+      localStorage.removeItem("token");
       navigate("/login");
     } catch (error) {
       console.error("Logout failed", error);

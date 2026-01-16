@@ -72,7 +72,6 @@ const AdminDashboardContent = () => {
       name: "Manage Users",
       bgColor: "bg-[#D92D20] hover:bg-[#c2261a] text-white",
       icon: manageUserIcon,
-      
     },
   ];
 
@@ -140,7 +139,7 @@ const AdminDashboardContent = () => {
               key={index}
               className={`${item.bgColor} rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-200 w-full text-center font-medium flex flex-col items-center justify-center min-h-[120px] transform hover:-translate-y-1`}
             >
-              <img src={item.icon} className="h-6 w-6 mb-3"  />
+              <img src={item.icon} className="h-6 w-6 mb-3" />
               <span className="font-semibold">{item.name}</span>
             </button>
           ))}

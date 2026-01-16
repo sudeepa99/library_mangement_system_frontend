@@ -3,23 +3,20 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo Readify.png";
 import { useEffect, useState } from "react";
-import { authApi } from "../api/auth";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await authApi.getMe();
-        setIsLoggedIn(true);
-      } catch {
-        setIsLoggedIn(false);
-      }
-    };
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
 
-    checkAuth();
+    if (token && user) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
   return (
     <div className="backdrop-blur-sm bg-black/30 fixed w-full flex flex-row items-center justify-between px-[4%] py-[0.3%] text-textColour font-robotoSlab">
@@ -33,7 +30,7 @@ const NavBar = () => {
 
       <div className="flex flex-row gap-8 justify-center absolute left-1/2 transform -translate-x-1/2">
         <Link
-          to="dashboard"
+          to="homepage"
           spy={true}
           smooth={true}
           offset={-70}

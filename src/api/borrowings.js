@@ -9,4 +9,12 @@ export const borrowingApi = {
       throw error;
     }
   },
+  createBorrowing: async (data) => {
+    try {
+      const response = await api.post("/borrowings", data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

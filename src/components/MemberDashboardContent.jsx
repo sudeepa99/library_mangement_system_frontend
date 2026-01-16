@@ -2,18 +2,22 @@ import { useEffect, useState } from "react";
 import { authApi } from "../api/auth";
 import { toast } from "react-toastify";
 import { bookApi } from "../api/books";
+import { borrowingApi } from "../api/borrowings";
 
 const MemberDashboardContent = () => {
   const [userRole, setUserRole] = useState(null);
   const [books, setBooks] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await authApi.getMe();
         setUserRole(res.data.role);
+        setCurrentUser(res.data);
       } catch {
         setUserRole(null);
+        setCurrentUser(null);
       }
     };
     fetchUser();
@@ -32,6 +36,21 @@ const MemberDashboardContent = () => {
       fetchBooks();
     }
   }, [userRole]);
+
+  const createBorrowing = async (bookId) => {
+    try {
+      if (!currentUser?._id) {
+        toast.error("User not loaded");
+        return;
+      }
+      const payload = { user: currentUser._id, book: bookId };
+      const response = await borrowingApi.createBorrowing(payload);
+      toast.success(response.message);
+      return response;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
 
   return (
     <div className="px-[4%] py-[2%]">
@@ -76,6 +95,7 @@ const MemberDashboardContent = () => {
               <div className="mt-5 flex flex-col gap-2">
                 <button
                   disabled={!isAvailable}
+                  onClick={() => createBorrowing(book._id)}
                   className={`w-full py-2 rounded-md font-medium transition
                     ${
                       isAvailable

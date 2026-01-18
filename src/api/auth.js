@@ -42,4 +42,16 @@ export const authApi = {
       throw error;
     }
   },
+  verifyCode: async (email, code) => {
+    try {
+      const response = await api.post(
+        "/auth/forgot-password/verify-code",
+        email,
+        code,
+      );
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

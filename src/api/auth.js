@@ -34,4 +34,12 @@ export const authApi = {
       throw error;
     }
   },
+  sendOTPCode: async (email) => {
+    try {
+      const response = await api.post("/auth/forgot-password/send-code", email);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

@@ -63,7 +63,8 @@ const MemberDashboardContent = () => {
           return (
             <div
               key={book._id}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition flex flex-col p-5"
+              className="bg-white rounded-xl shadow-sm flex flex-col p-5  border-gray-400 border-2  transition-all duration-300 ease-out
+            hover:scale-103 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="flex justify-center mb-4">
                 <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-xl font-bold text-blue-600">
@@ -107,7 +108,7 @@ const MemberDashboardContent = () => {
                 </button>
 
                 <button
-                  className="w-full py-2 rounded-md border border-gray-300 text-sm hover:bg-gray-100"
+                  className="w-full py-2 rounded-md border border-gray-300 text-sm hover:bg-gray-300"
                   onClick={() => window.open(book.moreInfoLink, "_blank")}
                 >
                   See More

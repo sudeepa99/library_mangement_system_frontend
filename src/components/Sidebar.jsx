@@ -14,14 +14,15 @@ const SideBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("");
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await authApi.getMe();
-        setUserRole(res.data.role);
-        setActiveTab(getActiveTabFromRoute(location.pathname, res.data.role));
+        const role = res.data.role;
+        setUserRole(role);
+        setActiveTab(getActiveTabFromRoute(location.pathname, role));
       } catch {
         setUserRole(null);
       }
@@ -49,7 +50,7 @@ const SideBar = () => {
   const menuItems =
     userRole === "member"
       ? [
-          { name: "Catalogue", path: "/member/catalogue", icon: dashboardIcon },
+          { name: "Catalogue", path: "/member/dashboard", icon: dashboardIcon },
           {
             name: "My Borrowings",
             path: "/member/borrowings",
@@ -100,9 +101,10 @@ const SideBar = () => {
       <div className="flex flex-col space-y-2 px-4 py-4">
         {menuItems.map((item, index) => {
           const isActive = activeTab === item.name;
+          if (!userRole) return null;
           return (
             <button
-              key={index}
+              key={item.path}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
                   ? "bg-green-600 text-white"

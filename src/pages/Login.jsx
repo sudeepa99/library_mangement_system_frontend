@@ -72,6 +72,21 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <Box sx={{ textAlign: "left", mt: 0.5 }}>
+            <Button
+              variant="text"
+              color="error"
+              size="small"
+              sx={{
+                padding: 0,
+                minWidth: "auto",
+                textTransform: "none",
+              }}
+              onClick={() => navigate("/forgetPassword")}
+            >
+              Forgot password?
+            </Button>
+          </Box>
           <Button
             type="submit"
             variant="contained"
@@ -97,16 +112,6 @@ const Login = () => {
           startIcon={<ArrowBackIcon />}
           // onClick={() => navigate("/")}
           onClick={() => {
-            console.log("=== Back to Home Clicked ===");
-            console.log(
-              "1. Before navigate - Current path:",
-              window.location.pathname
-            );
-            console.log("2. localStorage state:", {
-              token: localStorage.getItem("token"),
-              user: localStorage.getItem("user"),
-            });
-
             // Use a different approach
             window.location.href = "/"; // Try direct navigation first
 

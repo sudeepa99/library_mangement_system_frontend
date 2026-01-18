@@ -79,7 +79,7 @@ const Contact = () => {
           <h1 className="text-2xl">Quick Links</h1>
           <div className="flex flex-col gap-2 text-gray-400  ">
             <Link
-              to="dashboard"
+              to="homepage"
               spy={true}
               smooth={true}
               offset={-70}

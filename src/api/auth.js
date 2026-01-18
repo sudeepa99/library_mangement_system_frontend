@@ -18,4 +18,53 @@ export const authApi = {
       throw error;
     }
   },
+  logout: async () => {
+    try {
+      const response = await api.post("/auth/logout");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getMe: async () => {
+    try {
+      const response = await api.get("/auth/me");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  sendOTPCode: async (email) => {
+    try {
+      const response = await api.post("/auth/forgot-password/send-code", email);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+  verifyCode: async (email, code) => {
+    try {
+      const response = await api.post(
+        "/auth/forgot-password/verify-code",
+        email,
+        code,
+      );
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+  resetPassword: async (email, code, password) => {
+    try {
+      const response = await api.post(
+        "auth/forgot-password/reset",
+        email,
+        code,
+        password,
+      );
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

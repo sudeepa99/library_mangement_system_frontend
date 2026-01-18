@@ -77,7 +77,7 @@ const AdminDashboardContent = () => {
 
   return (
     <div className="px-[4%] py-[2%]">
-      <div className="">
+      <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Statistics</h2>
       </div>
 

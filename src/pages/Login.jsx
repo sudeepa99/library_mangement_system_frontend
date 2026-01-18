@@ -13,7 +13,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { authApi } from "../api/auth";
 import { toast } from "react-toastify";
-import { green } from "@mui/material/colors";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -32,7 +31,7 @@ const Login = () => {
       toast.success("Logged in Successfully");
 
       if (res.user.role === "member") {
-        navigate("/");
+        navigate("/member/dashboard");
       } else if (res.user.role === "librarian") {
         navigate("/admin/dashboard");
       } else {
@@ -73,6 +72,21 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <Box sx={{ textAlign: "left", mt: 0.5 }}>
+            <Button
+              variant="text"
+              color="error"
+              size="small"
+              sx={{
+                padding: 0,
+                minWidth: "auto",
+                textTransform: "none",
+              }}
+              onClick={() => navigate("/forgetPassword")}
+            >
+              Forgot password?
+            </Button>
+          </Box>
           <Button
             type="submit"
             variant="contained"
@@ -90,13 +104,20 @@ const Login = () => {
           </Typography>
         </Box>
         <Button
-          type="submit"
+          type="button"
           variant="text"
           fullWidth
           sx={{ mt: 3, mb: 2 }}
           disabled={loading}
           startIcon={<ArrowBackIcon />}
-          onClick={() => navigate("/")}
+          // onClick={() => navigate("/")}
+          onClick={() => {
+            // Use a different approach
+            window.location.href = "/"; // Try direct navigation first
+
+            // If that works, then use:
+            // navigate("/", { replace: true });
+          }}
         >
           Back to Home
         </Button>

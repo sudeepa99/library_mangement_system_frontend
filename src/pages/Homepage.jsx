@@ -4,12 +4,35 @@ import tipsIcon from "../assets/Gemini_Generated_Image_5gn81a5gn81a5gn8_upscayl_
 import About from "../components/About";
 import DidYouKnow from "../components/DidYouKnow";
 import Contact from "../components/Contact";
+import { useEffect } from "react";
+import { useAuth } from "../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 
-const Dashboard = () => {
+const Homepage = () => {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("HOMEPAGE MOUNTED");
+    console.log("Mount time:", new Date().toISOString());
+    console.log("User on mount:", user);
+    console.log("Loading on mount:", loading);
+
+    return () => {
+      console.log("HOMEPAGE UNMOUNTING");
+      console.log("Unmount time:", new Date().toISOString());
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("HOMEPAGE - Auth state changed:");
+    console.log("User:", user);
+    console.log("Loading:", loading);
+  }, [user, loading]);
   return (
     <>
       <div
-        id="dashboard"
+        id="homepage"
         className="bg-cover bg-center h-screen font-robotoSlab relative"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
@@ -48,4 +71,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Homepage;

@@ -8,7 +8,15 @@ import Register from "./pages/Register";
 import PrivateRoute from "./routes/privateRoute";
 import AdminRoute from "./routes/adminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
-import Dashboard from "./pages/Dashboard";
+import BookManagement from "./pages/BookManagement";
+import Borrowing from "./pages/Borrowing";
+import UserManagement from "./pages/UserManagement";
+import Reports from "./pages/Reports";
+import Homepage from "./pages/Homepage";
+import MemberDashboard from "./pages/MemberDashboard";
+import ForgetPassword from "./pages/ForgetPassword";
+import VerifyCode from "./pages/VerifyCode";
+import ResetPassword from "./pages/ResetPassword";
 
 const theme = createTheme({
   palette: {
@@ -33,26 +41,26 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgetPassword" element={<ForgetPassword />} />
+            <Route path="/verify-code" element={<VerifyCode />} />
+            <Route path="/rest-password" element={<ResetPassword />} />
 
-            <Route path="/" element={<PrivateRoute />}>
-              {/* <Route path="books" element={<Books />} /> */}
-              {/* <Route path="books/:id" element={<BookDetails />} /> */}
-              {/* <Route path="my-borrowings" element={<MyBorrowings />} /> */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/member/dashboard" element={<MemberDashboard />} />
+            </Route>
 
-              <Route path="/admin" element={<AdminRoute />}>
-                <Route path="dashboard" element={<AdminDashboard />} />
-                {/* <Route path="books/add" element={<AddBook />} /> */}
-                {/* <Route path="books/edit/:id" element={<EditBook />} /> */}
-                {/* <Route path="users" element={<Users />} /> */}
-                {/* <Route path="users/:id" element={<UserDetails />} /> */}
-                {/* <Route path="borrowings" element={<Borrowings />} /> */}
-                {/* <Route path="overdue-books" element={<OverdueBooks />} /> */}
+            <Route element={<PrivateRoute />}>
+              <Route element={<AdminRoute />}>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/books" element={<BookManagement />} />
+                <Route path="/admin/borrowings" element={<Borrowing />} />
+                <Route path="/admin/users" element={<UserManagement />} />
+                <Route path="/admin/reports" element={<Reports />} />
               </Route>
             </Route>
-            {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </BrowserRouter>
       </AuthProvider>

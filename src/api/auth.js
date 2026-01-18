@@ -54,4 +54,17 @@ export const authApi = {
       throw error;
     }
   },
+  resetPassword: async (email, code, password) => {
+    try {
+      const response = await api.post(
+        "auth/forgot-password/reset",
+        email,
+        code,
+        password,
+      );
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

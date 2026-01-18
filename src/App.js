@@ -16,6 +16,7 @@ import Homepage from "./pages/Homepage";
 import MemberDashboard from "./pages/MemberDashboard";
 import ForgetPassword from "./pages/ForgetPassword";
 import VerifyCode from "./pages/VerifyCode";
+import ResetPassword from "./pages/ResetPassword";
 
 const theme = createTheme({
   palette: {
@@ -45,6 +46,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgetPassword" element={<ForgetPassword />} />
             <Route path="/verify-code" element={<VerifyCode />} />
+            <Route path="/rest-password" element={<ResetPassword />} />
 
             <Route element={<PrivateRoute />}>
               <Route path="/member/dashboard" element={<MemberDashboard />} />

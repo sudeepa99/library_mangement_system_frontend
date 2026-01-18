@@ -18,7 +18,7 @@ const ForgetPassword = () => {
       toast.success(response?.data?.message);
       navigate("/verify-code");
     } catch (e) {
-      toast.error(e.response?.data?.message || "Failed to send code");
+      toast.error(e.response?.data?.error || "Failed to send code");
     }
   };
 

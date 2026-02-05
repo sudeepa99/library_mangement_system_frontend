@@ -34,7 +34,7 @@ const MyBorrowingContent = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "active":
+      case "borrowed":
         return "bg-blue-100 text-blue-700";
       case "returned":
         return "bg-green-100 text-green-700";
@@ -72,6 +72,94 @@ const MyBorrowingContent = () => {
           Track all your borrowed books and their due dates
         </p>
       </div>
+
+      {borrowings.length > 0 && (
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-blue-600 mb-1">
+                  Total Borrowed
+                </p>
+                <p className="text-3xl font-bold text-blue-900">
+                  {borrowings.length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-blue-700"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-green-600 mb-1">
+                  Currently Borrowed
+                </p>
+                <p className="text-3xl font-bold text-green-900">
+                  {borrowings.filter((b) => b.status === "borrowed").length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-green-700"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-purple-600 mb-1">
+                  Returned
+                </p>
+                <p className="text-3xl font-bold text-purple-900">
+                  {borrowings.filter((b) => b.status === "returned").length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-purple-700"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {borrowings.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
@@ -184,7 +272,7 @@ const MyBorrowingContent = () => {
                         </div>
 
                         {/* Days Remaining Indicator */}
-                        {borrowing.status === "active" && (
+                        {borrowing.status === "borrowed" && (
                           <div className="mt-3">
                             {isOverdue ? (
                               <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 text-red-700 rounded-full text-sm font-medium">
@@ -280,95 +368,6 @@ const MyBorrowingContent = () => {
               </div>
             );
           })}
-        </div>
-      )}
-
-      {/* Statistics Section */}
-      {borrowings.length > 0 && (
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-blue-600 mb-1">
-                  Total Borrowed
-                </p>
-                <p className="text-3xl font-bold text-blue-900">
-                  {borrowings.length}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-blue-700"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-green-600 mb-1">
-                  Currently Active
-                </p>
-                <p className="text-3xl font-bold text-green-900">
-                  {borrowings.filter((b) => b.status === "active").length}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-green-700"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-purple-600 mb-1">
-                  Returned
-                </p>
-                <p className="text-3xl font-bold text-purple-900">
-                  {borrowings.filter((b) => b.status === "returned").length}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-purple-700"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
         </div>
       )}
     </div>

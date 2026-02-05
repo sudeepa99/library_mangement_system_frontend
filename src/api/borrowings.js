@@ -19,7 +19,7 @@ export const borrowingApi = {
   },
   getuserBorrowings: async (userId) => {
     try {
-      const response = await api.get(`/user/${userId}`);
+      const response = await api.get(`/borrowings/user/${userId}`);
       return response.data;
     } catch (error) {
       throw error;

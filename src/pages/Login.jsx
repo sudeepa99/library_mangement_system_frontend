@@ -72,7 +72,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Box sx={{ textAlign: "left", mt: 0.5 }}>
+          <Box sx={{ textAlign: "right", mt: 0.5 }}>
             <Button
               variant="text"
               color="error"

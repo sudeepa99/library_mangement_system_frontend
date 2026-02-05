@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import PageLoader from "./PageLoader";
 import { toast } from "react-toastify";
-import { borrowingApi } from "../api/borrowings";
 import { authApi } from "../api/auth";
+import { borrowingApi } from "../api/borrowings";
 
 const MyBorrowingContent = () => {
   const [borrowings, setBorrowings] = useState([]);
@@ -14,12 +14,12 @@ const MyBorrowingContent = () => {
       try {
         setLoading(true);
         const userRes = await authApi.getMe();
-        console.log("User Data", userRes);
         setCurrentUser(userRes.data);
 
         const borrowingsRes = await borrowingApi.getuserBorrowings(
           userRes.data._id,
         );
+
         setBorrowings(borrowingsRes.data);
       } catch (error) {
         toast.error("Failed to fetch borrowings");

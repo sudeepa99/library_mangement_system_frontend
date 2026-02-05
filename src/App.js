@@ -18,6 +18,7 @@ import ForgetPassword from "./pages/ForgetPassword";
 import VerifyCode from "./pages/VerifyCode";
 import ResetPassword from "./pages/ResetPassword";
 import MyBorrowing from "./pages/MyBorrowing";
+import BorrowingHistory from "./pages/BorrowingHistory";
 
 const theme = createTheme({
   palette: {
@@ -52,6 +53,7 @@ function App() {
             <Route element={<PrivateRoute />}>
               <Route path="/member/dashboard" element={<MemberDashboard />} />
               <Route path="/member/myBorrowing" element={<MyBorrowing />} />
+              <Route path="/member/history" element={<BorrowingHistory />} />
             </Route>
 
             <Route element={<PrivateRoute />}>

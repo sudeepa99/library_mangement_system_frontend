@@ -8,7 +8,7 @@ const HistoryContent = () => {
   const [history, setHistory] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState("all"); // all, Borrowed, Returned
+  const [filterStatus, setFilterStatus] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {

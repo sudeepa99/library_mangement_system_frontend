@@ -131,7 +131,7 @@ const MyBorrowingContent = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
+          {/* <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-purple-600 mb-1">
@@ -157,7 +157,7 @@ const MyBorrowingContent = () => {
                 </svg>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
 

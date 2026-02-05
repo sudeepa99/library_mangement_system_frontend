@@ -25,4 +25,12 @@ export const borrowingApi = {
       throw error;
     }
   },
+  returnBook: async (borrowingId) => {
+    try {
+      const response = await api.put(`/api/borrowings/${borrowingId}/return`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

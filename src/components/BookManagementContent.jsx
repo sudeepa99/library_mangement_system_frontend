@@ -14,6 +14,7 @@ import { bookApi } from "../api/books";
 import EditBook from "./EditBook";
 import DeleteBook from "./DeleteBook";
 import { toast } from "react-toastify";
+import PageLoader from "./PageLoader";
 
 const BookManagementContent = () => {
   const [expanded, setExpanded] = useState({});
@@ -37,7 +38,7 @@ const BookManagementContent = () => {
       const response = await bookApi.getBooks();
       setBooks(response.data || []);
     } catch (err) {
-      console.error("Error fetching books:", err);
+      toast.error("Error fetching books:", err);
       setError("Failed to fetch books. Please try again.");
       setBooks([]);
     } finally {
@@ -151,7 +152,7 @@ const BookManagementContent = () => {
         },
       },
     ],
-    []
+    [],
   );
 
   const table = useReactTable({
@@ -183,14 +184,7 @@ const BookManagementContent = () => {
   };
 
   if (loading) {
-    return (
-      <div className="px-[4%] py-[2%] flex justify-center items-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading books...</p>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (error) {
@@ -253,7 +247,7 @@ const BookManagementContent = () => {
                     >
                       {flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                     </th>
                   ))}
@@ -275,7 +269,7 @@ const BookManagementContent = () => {
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </td>
                       ))}

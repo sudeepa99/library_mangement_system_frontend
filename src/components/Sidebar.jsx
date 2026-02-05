@@ -53,7 +53,7 @@ const SideBar = () => {
           { name: "Catalogue", path: "/member/dashboard", icon: dashboardIcon },
           {
             name: "My Borrowings",
-            path: "/member/borrowings",
+            path: "/member/myBorrowing",
             icon: borrowingIcon,
           },
           { name: "History", path: "/member/history", icon: reportsIcon },

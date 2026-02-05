@@ -3,21 +3,26 @@ import { authApi } from "../api/auth";
 import { toast } from "react-toastify";
 import { bookApi } from "../api/books";
 import { borrowingApi } from "../api/borrowings";
+import PageLoader from "./PageLoader";
 
 const MemberDashboardContent = () => {
   const [userRole, setUserRole] = useState(null);
   const [books, setBooks] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        setLoading(true);
         const res = await authApi.getMe();
         setUserRole(res.data.role);
         setCurrentUser(res.data);
       } catch {
         setUserRole(null);
         setCurrentUser(null);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUser();
@@ -27,10 +32,13 @@ const MemberDashboardContent = () => {
     if (userRole === "member") {
       const fetchBooks = async () => {
         try {
+          setLoading(true);
           const res = await bookApi.getBooks();
           setBooks(res.data);
         } catch {
           toast.error("Failed to fetch books");
+        } finally {
+          setLoading(false);
         }
       };
       fetchBooks();
@@ -51,6 +59,8 @@ const MemberDashboardContent = () => {
       toast.error(error?.response?.data?.message);
     }
   };
+
+  if (loading) return <PageLoader />;
 
   return (
     <div className="px-[4%] py-[2%]">

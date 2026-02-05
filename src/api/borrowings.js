@@ -17,4 +17,20 @@ export const borrowingApi = {
       throw error;
     }
   },
+  getuserBorrowings: async (userId) => {
+    try {
+      const response = await api.get(`/borrowings/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  returnBook: async (borrowingId) => {
+    try {
+      const response = await api.put(`/borrowings/${borrowingId}/return`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

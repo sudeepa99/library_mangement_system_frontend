@@ -47,6 +47,7 @@ const ReportContent = () => {
 
       const booksResponse = await bookApi.getBooks();
       const borrowingsResponse = await borrowingApi.getBorrowings();
+      console.log("boroow", borrowingsResponse);
 
       setBooks(booksResponse.data?.data || []);
       setBorrowings(borrowingsResponse.data?.data || []);

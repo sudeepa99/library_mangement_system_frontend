@@ -154,25 +154,25 @@ const BorrowingContent = () => {
                   <>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {borrowing.user.name}
+                        {borrowing.user.name ?? "N/A"}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {borrowing.user.email}
+                        {borrowing.user.email ?? "N/A"}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {borrowing.book.title}
+                        {borrowing.book.title ?? "N/A"}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {borrowing.book.author}
+                        {borrowing.book.author ?? "N/A"}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.borrowedDate)}
+                      {formatDate(borrowing.borrowedDate) ?? "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.dueDate)}
+                      {formatDate(borrowing.dueDate) ?? "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -184,7 +184,7 @@ const BorrowingContent = () => {
                       >
                         {calculateOverdueDays(borrowing.dueDate) > 0
                           ? `Overdue by ${calculateOverdueDays(
-                              borrowing.dueDate
+                              borrowing.dueDate,
                             )} days`
                           : "On time"}
                       </span>
@@ -205,22 +205,22 @@ const BorrowingContent = () => {
                   <>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {borrowing.user.name}
+                        {borrowing.user.name ?? "N/A"}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {borrowing.user.email}
+                        {borrowing.user.email ?? "N/A"}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {borrowing.book.title}
+                        {borrowing.book.title ?? "N/A"}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {borrowing.book.author}
+                        {borrowing.book.author ?? "N/A"}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.dueDate)}
+                      {formatDate(borrowing.dueDate) ?? "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
@@ -246,25 +246,27 @@ const BorrowingContent = () => {
                   <>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {borrowing.user.name}
+                        {borrowing.user.name ?? "N/A"}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {borrowing.user.email}
+                        {borrowing.user.email ?? "N/A"}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {borrowing.book.title}
+                        {borrowing.book.title ?? "N/A"}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {borrowing.book.author}
+                        {borrowing.book.author ?? "N/A"}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.borrowedDate)}
+                      {formatDate(borrowing.borrowedDate) ?? "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.returnedDate || borrowing.dueDate)}
+                      {formatDate(
+                        borrowing.returnedDate || borrowing.dueDate,
+                      ) ?? "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -320,7 +322,7 @@ const BorrowingContent = () => {
             borrowings.filter(
               (b) =>
                 new Date(b.dueDate) < new Date() &&
-                (b.status === "Borrowed" || b.status === "Active")
+                (b.status === "Borrowed" || b.status === "Active"),
             ).length
           }
           )

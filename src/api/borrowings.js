@@ -27,7 +27,7 @@ export const borrowingApi = {
   },
   returnBook: async (borrowingId) => {
     try {
-      const response = await api.put(`/api/borrowings/${borrowingId}/return`);
+      const response = await api.put(`/borrowings/${borrowingId}/return`);
       return response.data;
     } catch (error) {
       throw error;

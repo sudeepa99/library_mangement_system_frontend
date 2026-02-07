@@ -48,7 +48,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgetPassword" element={<ForgetPassword />} />
             <Route path="/verify-code" element={<VerifyCode />} />
-            <Route path="/rest-password" element={<ResetPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             <Route element={<PrivateRoute />}>
               <Route path="/member/dashboard" element={<MemberDashboard />} />

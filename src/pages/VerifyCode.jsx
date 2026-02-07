@@ -17,7 +17,7 @@ const VerifyCode = () => {
     try {
       const response = await authApi.verifyCode({ email, code });
       toast.success(response?.data?.message);
-      navigate("/rest-password");
+      navigate("/reset-password");
     } catch (e) {
       toast.error(e.response?.data?.error);
     }

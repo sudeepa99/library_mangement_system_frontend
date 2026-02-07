@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import { toast } from "react-toastify";
 import { authApi } from "../api/auth";
+import { validateRegister } from "../validations/validateRegister";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -22,16 +23,26 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("librarian");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
   const { login: authLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password.length < 6) {
-      toast.error("Password must be atleast 6 characters long");
+    const validationErrors = validateRegister({
+      name,
+      email,
+      password,
+      role,
+    });
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
+    setErrors({});
     setLoading(true);
     try {
       const res = await authApi.register({ name, email, password, role });
@@ -52,7 +63,7 @@ const Register = () => {
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Create Your Library Account
         </Typography>
-        <Box component="form" sx={{ mt: 3 }} onSubmit={handleSubmit}>
+        <Box component="form" sx={{ mt: 3 }} onSubmit={handleSubmit} noValidate>
           <TextField
             label="Name"
             type="name"
@@ -61,6 +72,9 @@ const Register = () => {
             variant="outlined"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            error={!!errors.name}
+            helperText={errors.name}
+            required
           />
 
           <TextField
@@ -72,8 +86,10 @@ const Register = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            error={!!errors.email}
+            helperText={errors.email}
           />
-          <FormControl fullWidth margin="normal" required>
+          <FormControl fullWidth margin="normal" required error={!!errors.role}>
             <InputLabel id="role-label">Role</InputLabel>
             <Select
               labelId="role-label"
@@ -84,6 +100,11 @@ const Register = () => {
               <MenuItem value="member">Member</MenuItem>
               <MenuItem value="librarian">Librarian</MenuItem>
             </Select>
+            {errors.role && (
+              <Typography variant="caption" color="error">
+                {errors.role}
+              </Typography>
+            )}
           </FormControl>
           <TextField
             label="Password"
@@ -94,6 +115,8 @@ const Register = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            error={!!errors.password}
+            helperText={errors.password}
           />
 
           <Button

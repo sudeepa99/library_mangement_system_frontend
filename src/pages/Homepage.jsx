@@ -6,29 +6,11 @@ import DidYouKnow from "../components/DidYouKnow";
 import Contact from "../components/Contact";
 import { useEffect } from "react";
 import { useAuth } from "../contexts/authContext";
-import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("HOMEPAGE MOUNTED");
-    console.log("Mount time:", new Date().toISOString());
-    console.log("User on mount:", user);
-    console.log("Loading on mount:", loading);
-
-    return () => {
-      console.log("HOMEPAGE UNMOUNTING");
-      console.log("Unmount time:", new Date().toISOString());
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log("HOMEPAGE - Auth state changed:");
-    console.log("User:", user);
-    console.log("Loading:", loading);
-  }, [user, loading]);
+  useEffect(() => {}, [user, loading]);
   return (
     <>
       <div

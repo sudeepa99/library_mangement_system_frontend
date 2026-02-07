@@ -28,21 +28,42 @@ const MemberDashboardContent = () => {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (userRole === "member") {
-      const fetchBooks = async () => {
-        try {
-          setLoading(true);
-          const res = await bookApi.getBooks();
-          setBooks(res.data);
-        } catch {
-          toast.error("Failed to fetch books");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchBooks();
+  // useEffect(() => {
+  //   if (userRole === "member") {
+  //     const fetchBooks = async () => {
+  //       try {
+  //         setLoading(true);
+  //         const res = await bookApi.getBooks();
+  //         setBooks(res.data);
+  //       } catch {
+  //         toast.error("Failed to fetch books");
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+  //     fetchBooks();
+  //   }
+  // }, [userRole]);
+  const fetchBooks = async () => {
+    try {
+      const res = await bookApi.getBooks();
+      setBooks(res.data);
+    } catch {
+      toast.error("Failed to fetch books");
     }
+  };
+
+  useEffect(() => {
+    if (userRole !== "member") return;
+
+    setLoading(true);
+    fetchBooks().finally(() => setLoading(false));
+
+    const intervalId = setInterval(() => {
+      fetchBooks();
+    }, 10000);
+
+    return () => clearInterval(intervalId);
   }, [userRole]);
 
   const createBorrowing = async (bookId) => {

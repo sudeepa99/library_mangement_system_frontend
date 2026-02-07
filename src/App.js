@@ -19,6 +19,7 @@ import VerifyCode from "./pages/VerifyCode";
 import ResetPassword from "./pages/ResetPassword";
 import MyBorrowing from "./pages/MyBorrowing";
 import BorrowingHistory from "./pages/BorrowingHistory";
+import LandingRoute from "./routes/landingRoute";
 
 const theme = createTheme({
   palette: {
@@ -43,7 +44,7 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Homepage />} />
+            <Route path="/" element={<LandingRoute />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgetPassword" element={<ForgetPassword />} />

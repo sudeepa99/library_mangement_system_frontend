@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { categoryApi } from "../api/categories";
 import { toast } from "react-toastify";
 import PageLoader from "./PageLoader";
 
@@ -9,6 +8,7 @@ import DeleteCategoryDialog from "./DeleteCategoryDialog";
 
 import editIcon from "../assets/icons/pencil.png";
 import deleteIcon from "../assets/icons/trash.png";
+import { categoryApi } from "../api/categories";
 
 const CategoryManagementContent = () => {
   const [categories, setCategories] = useState([]);

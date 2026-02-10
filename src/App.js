@@ -12,7 +12,6 @@ import BookManagement from "./pages/BookManagement";
 import Borrowing from "./pages/Borrowing";
 import UserManagement from "./pages/UserManagement";
 import Reports from "./pages/Reports";
-import Homepage from "./pages/Homepage";
 import MemberDashboard from "./pages/MemberDashboard";
 import ForgetPassword from "./pages/ForgetPassword";
 import VerifyCode from "./pages/VerifyCode";
@@ -20,6 +19,7 @@ import ResetPassword from "./pages/ResetPassword";
 import MyBorrowing from "./pages/MyBorrowing";
 import BorrowingHistory from "./pages/BorrowingHistory";
 import LandingRoute from "./routes/landingRoute";
+import Category from "./pages/Category";
 
 const theme = createTheme({
   palette: {
@@ -64,6 +64,7 @@ function App() {
                 <Route path="/admin/borrowings" element={<Borrowing />} />
                 <Route path="/admin/users" element={<UserManagement />} />
                 <Route path="/admin/reports" element={<Reports />} />
+                <Route path="/admin/categories" element={<Category />} />
               </Route>
             </Route>
           </Routes>

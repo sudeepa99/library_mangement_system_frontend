@@ -1,0 +1,130 @@
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import PageLoader from "./PageLoader";
+
+import AddCategoryDialog from "./AddCategoryDialog";
+import EditCategoryDialog from "./EditCategoryDialog";
+import DeleteCategoryDialog from "./DeleteCategoryDialog";
+
+import editIcon from "../assets/icons/pencil.png";
+import deleteIcon from "../assets/icons/trash.png";
+import { categoryApi } from "../api/categories";
+
+const CategoryManagementContent = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const res = await categoryApi.getCategories();
+      setCategories(res.data || []);
+    } catch (err) {
+      toast.error("Failed to load categories");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <PageLoader />;
+
+  return (
+    <div className="px-[4%] py-[2%]">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Category Management
+        </h2>
+
+        <button
+          onClick={() => setAddOpen(true)}
+          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+        >
+          Add Category
+        </button>
+      </div>
+
+      {/* Empty State */}
+      {categories.length === 0 ? (
+        <div className="mt-10 text-center border-2 border-dashed border-gray-300 rounded-lg py-12">
+          <p className="text-gray-500 text-lg">No categories available</p>
+          <button
+            onClick={() => setAddOpen(true)}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          >
+            Add First Category
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+          {categories.map((category) => (
+            <div
+              key={category._id}
+              className="bg-white border rounded-xl shadow-sm hover:shadow-md transition p-5 flex justify-between items-center"
+            >
+              <div>
+                <p className="text-lg font-semibold text-gray-800">
+                  {category.name}
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setEditOpen(true);
+                  }}
+                  className="p-2 bg-blue-100 rounded-lg hover:bg-blue-200"
+                >
+                  <img src={editIcon} alt="Edit" className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setDeleteOpen(true);
+                  }}
+                  className="p-2 bg-red-100 rounded-lg hover:bg-red-200"
+                >
+                  <img src={deleteIcon} alt="Delete" className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Dialogs */}
+      <AddCategoryDialog
+        isOpen={addOpen}
+        onClose={() => setAddOpen(false)}
+        refresh={fetchCategories}
+      />
+
+      <EditCategoryDialog
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        category={selectedCategory}
+        refresh={fetchCategories}
+      />
+
+      <DeleteCategoryDialog
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        category={selectedCategory}
+        refresh={fetchCategories}
+      />
+    </div>
+  );
+};
+
+export default CategoryManagementContent;

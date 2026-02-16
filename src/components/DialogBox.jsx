@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import CloseIcon from "../assets/icons/circle-x.png";
+import { categoryApi } from "../api/categories";
 
 const DialogBox = ({
   DialogTitle,
@@ -13,6 +14,7 @@ const DialogBox = ({
 }) => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -49,6 +51,17 @@ const DialogBox = ({
       [name]: value,
     }));
   };
+  useEffect(() => {
+    const fetchCategories = async (e) => {
+      try {
+        const response = await categoryApi.getCategories();
+        setCategories(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -149,12 +162,11 @@ const DialogBox = ({
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
                 <option value="">Select Category</option>
-                <option value="Fiction">Fiction</option>
-                <option value="Non-Fiction">Non-Fiction</option>
-                <option value="Science">Science</option>
-                <option value="Technology">Technology</option>
-                <option value="Literature">Literature</option>
-                <option value="History">History</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
 

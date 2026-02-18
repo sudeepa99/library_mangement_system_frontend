@@ -11,6 +11,7 @@ const MyBorrowingContent = () => {
   const [returningBookId, setReturningBookId] = useState(null);
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [selectedBorrowing, setSelectedBorrowing] = useState(null);
+  const [preModalLoading, setPreModalLoading] = useState(false);
 
   const fetchUserAndBorrowings = async () => {
     try {
@@ -37,7 +38,12 @@ const MyBorrowingContent = () => {
 
   const handleReturnClick = (borrowing) => {
     setSelectedBorrowing(borrowing);
-    setShowReturnModal(true);
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setPreModalLoading(false);
+      setShowReturnModal(true);
+    }, 1500);
   };
 
   const handleReturnBook = async () => {
@@ -109,7 +115,15 @@ const MyBorrowingContent = () => {
 
   return (
     <div className="h-full flex flex-col p-8">
-      {/* Return Confirmation Modal */}
+      {preModalLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="flex flex-col items-center bg-white p-6 rounded-xl shadow-xl">
+            <div className="w-12 h-12 border-4 border-gray-300 border-t-green-600 rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-800 font-medium">Preparing...</p>
+          </div>
+        </div>
+      )}
+
       {showReturnModal && selectedBorrowing && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">

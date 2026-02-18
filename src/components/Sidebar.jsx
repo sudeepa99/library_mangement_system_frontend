@@ -33,8 +33,8 @@ const SideBar = () => {
 
   const getActiveTabFromRoute = (path, role) => {
     if (role === "member") {
-      if (path === "/member/catalogue") return "Catalogue";
-      if (path === "/member/borrowings") return "My Borrowings";
+      if (path === "/member/dashboard") return "Catalogue";
+      if (path === "/member/myBorrowing") return "My Borrowings";
       if (path === "/member/history") return "History";
     } else {
       if (path === "/admin/dashboard") return "Dashboard";

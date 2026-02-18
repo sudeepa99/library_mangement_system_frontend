@@ -16,25 +16,35 @@ const SideBar = () => {
   const [activeTab, setActiveTab] = useState("");
   const [userRole, setUserRole] = useState("");
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await authApi.getMe();
-        const role = res.data.role;
-        setUserRole(role);
-        setActiveTab(getActiveTabFromRoute(location.pathname, role));
-      } catch {
-        setUserRole(null);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const res = await authApi.getMe();
+  //       const role = res.data.role;
+  //       setUserRole(role);
+  //       setActiveTab(getActiveTabFromRoute(location.pathname, role));
+  //     } catch {
+  //       setUserRole(null);
+  //     }
+  //   };
 
-    fetchUser();
+  //   fetchUser();
+  // }, [location.pathname]);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserRole(user.role);
+      setActiveTab(getActiveTabFromRoute(location.pathname, user.role));
+    }
   }, [location.pathname]);
 
   const getActiveTabFromRoute = (path, role) => {
     if (role === "member") {
-      if (path === "/member/catalogue") return "Catalogue";
-      if (path === "/member/borrowings") return "My Borrowings";
+      if (path === "/member/dashboard") return "Catalogue";
+      if (path === "/member/myBorrowing") return "My Borrowings";
       if (path === "/member/history") return "History";
     } else {
       if (path === "/admin/dashboard") return "Dashboard";

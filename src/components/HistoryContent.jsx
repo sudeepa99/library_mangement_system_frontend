@@ -17,7 +17,6 @@ const HistoryContent = () => {
         setLoading(true);
         const userRes = await authApi.getMe();
         setCurrentUser(userRes.data);
-
         const historyRes = await borrowingApi.getuserBorrowings(
           userRes.data._id,
         );
@@ -29,7 +28,6 @@ const HistoryContent = () => {
         setLoading(false);
       }
     };
-
     fetchUserAndHistory();
   }, []);
 
@@ -50,7 +48,6 @@ const HistoryContent = () => {
     return diffDays;
   };
 
-  // Filter and search logic
   const filteredHistory = history.filter((item) => {
     const matchesStatus =
       filterStatus === "all" || item.status === filterStatus;
@@ -61,7 +58,6 @@ const HistoryContent = () => {
     return matchesStatus && matchesSearch;
   });
 
-  // Group by status for statistics
   const stats = {
     total: history.length,
     borrowed: history.filter((h) => h.status === "Borrowed").length,
@@ -72,17 +68,17 @@ const HistoryContent = () => {
   if (loading) return <PageLoader />;
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Borrowing History
-        </h1>
-        <p className="text-gray-600">
+    <div className="flex flex-col h-full overflow-hidden p-6 space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Borrowing History</h1>
+        <p className="text-gray-600 mt-1">
           Complete record of all your library transactions
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 ">
         <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6 border border-indigo-200">
           <div className="flex items-center justify-between">
             <div>
@@ -110,7 +106,6 @@ const HistoryContent = () => {
             </div>
           </div>
         </div>
-
         <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200">
           <div className="flex items-center justify-between">
             <div>
@@ -138,7 +133,6 @@ const HistoryContent = () => {
             </div>
           </div>
         </div>
-
         <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-6 border border-emerald-200">
           <div className="flex items-center justify-between">
             <div>
@@ -166,7 +160,6 @@ const HistoryContent = () => {
             </div>
           </div>
         </div>
-
         <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl p-6 border border-rose-200">
           <div className="flex items-center justify-between">
             <div>
@@ -197,91 +190,54 @@ const HistoryContent = () => {
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 shrink-0">
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
-          <div className="flex-1">
-            <div className="relative">
-              <svg
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search by book title or author..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+          <div className="relative flex-1">
+            <input
+              type="text"
+              placeholder="Search by book title or author..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
 
           {/* Status Filter */}
-          <div className="md:w-64">
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-            >
-              <option value="all">All Status</option>
-              <option value="Borrowed">Currently Borrowed</option>
-              <option value="Returned">Returned</option>
-            </select>
-          </div>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="w-full md:w-48 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+          >
+            <option value="all">All Status</option>
+            <option value="Borrowed">Currently Borrowed</option>
+            <option value="Returned">Returned</option>
+          </select>
         </div>
 
         {/* Active filters indicator */}
         {(filterStatus !== "all" || searchTerm !== "") && (
-          <div className="mt-4 flex items-center gap-2 flex-wrap">
-            <span className="text-sm text-gray-600">Active filters:</span>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-sm text-gray-500">Active filters:</span>
             {filterStatus !== "all" && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                 Status: {filterStatus}
                 <button
                   onClick={() => setFilterStatus("all")}
                   className="hover:bg-blue-200 rounded-full p-0.5"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  ✕
                 </button>
               </span>
             )}
             {searchTerm !== "" && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                 Search: "{searchTerm}"
                 <button
                   onClick={() => setSearchTerm("")}
                   className="hover:bg-blue-200 rounded-full p-0.5"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  ✕
                 </button>
               </span>
             )}
@@ -299,209 +255,156 @@ const HistoryContent = () => {
       </div>
 
       {/* Results count */}
-      <div className="mb-4">
-        <p className="text-sm text-gray-600">
-          Showing {filteredHistory.length} of {history.length} records
-        </p>
-      </div>
+      <p className="text-sm text-gray-500 shrink-0">
+        Showing {filteredHistory.length} of {history.length} records
+      </p>
 
-      {/* History Table/List */}
+      {/* History Table/List — scrollable */}
       {filteredHistory.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              className="w-10 h-10 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+        <div className="flex flex-col items-center justify-center flex-1 text-center">
+          <p className="text-xl font-semibold text-gray-700">
             No Records Found
-          </h3>
-          <p className="text-gray-500">
+          </p>
+          <p className="text-gray-500 mt-1">
             {searchTerm || filterStatus !== "all"
               ? "Try adjusting your filters or search terms"
               : "You haven't borrowed any books yet"}
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="flex-1 min-h-0 overflow-y-auto rounded-xl border border-gray-200 shadow-sm scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
           {/* Desktop Table View */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Book Details
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Borrowed Date
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Due Date
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Returned Date
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Duration
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Fine
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredHistory.map((record) => {
-                  const duration = calculateBorrowingDuration(
-                    record.borrowedDate,
-                    record.returnedDate,
-                  );
-                  return (
-                    <tr
-                      key={record._id}
-                      className="hover:bg-gray-50 transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <span className="text-lg font-bold text-white">
-                              {record.book.title.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-800">
-                              {record.book.title}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              {record.book.author}
-                            </p>
-                          </div>
+          <table className="hidden md:table w-full bg-white">
+            <thead className="sticky top-0 bg-gray-50 z-10">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Book Details
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Borrowed Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Due Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Returned Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Duration
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Fine
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {filteredHistory.map((record) => {
+                const duration = calculateBorrowingDuration(
+                  record.borrowedDate,
+                  record.returnedDate,
+                );
+                return (
+                  <tr key={record._id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm shrink-0">
+                          {record.book.title.charAt(0).toUpperCase()}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {formatDate(record.borrowedDate)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {formatDate(record.dueDate)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {record.returnedDate ? (
-                          formatDate(record.returnedDate)
-                        ) : (
-                          <span className="text-gray-400 italic">
-                            Not returned
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {duration} day{duration !== 1 ? "s" : ""}
-                      </td>
-                      <td className="px-6 py-4">
-                        {record.fine && record.fine > 0 ? (
-                          <span className="text-sm font-semibold text-red-600">
-                            ${record.fine.toFixed(2)}
-                          </span>
-                        ) : (
-                          <span className="text-sm text-gray-400">$0.00</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
-                            record.status === "Borrowed"
-                              ? "bg-amber-100 text-amber-700"
-                              : "bg-emerald-100 text-emerald-700"
-                          }`}
-                        >
-                          {record.status}
+                        <div>
+                          <p className="font-medium text-gray-900">
+                            {record.book.title}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {record.book.author}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">
+                      {formatDate(record.borrowedDate)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">
+                      {formatDate(record.dueDate)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">
+                      {record.returnedDate ? (
+                        formatDate(record.returnedDate)
+                      ) : (
+                        <span className="text-orange-500 font-medium">
+                          Not returned
                         </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">
+                      {duration} day{duration !== 1 ? "s" : ""}
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      {record.fine && record.fine > 0 ? (
+                        <span className="text-red-600 font-medium">
+                          ${record.fine.toFixed(2)}
+                        </span>
+                      ) : (
+                        <span className="text-gray-500">$0.00</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${record.status === "Borrowed" ? "bg-blue-100 text-blue-700" : "bg-green-100 text-green-700"}`}
+                      >
+                        {record.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
           {/* Mobile Card View */}
-          <div className="md:hidden divide-y divide-gray-200">
+          <div className="md:hidden divide-y divide-gray-100 bg-white">
             {filteredHistory.map((record) => {
               const duration = calculateBorrowingDuration(
                 record.borrowedDate,
                 record.returnedDate,
               );
               return (
-                <div key={record._id} className="p-4">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-xl font-bold text-white">
+                <div key={record._id} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm shrink-0">
                         {record.book.title.charAt(0).toUpperCase()}
-                      </span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {record.book.title}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {record.book.author}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-800">
-                        {record.book.title}
-                      </h4>
-                      <p className="text-sm text-gray-500">
-                        {record.book.author}
-                      </p>
-                      <span
-                        className={`inline-block mt-2 px-2 py-1 rounded-full text-xs font-semibold ${
-                          record.status === "Borrowed"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-emerald-100 text-emerald-700"
-                        }`}
-                      >
-                        {record.status}
-                      </span>
-                    </div>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 ${record.status === "Borrowed" ? "bg-blue-100 text-blue-700" : "bg-green-100 text-green-700"}`}
+                    >
+                      {record.status}
+                    </span>
                   </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Borrowed:</span>
-                      <span className="font-medium text-gray-700">
-                        {formatDate(record.borrowedDate)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Due:</span>
-                      <span className="font-medium text-gray-700">
-                        {formatDate(record.dueDate)}
-                      </span>
-                    </div>
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <p>Borrowed: {formatDate(record.borrowedDate)}</p>
+                    <p>Due: {formatDate(record.dueDate)}</p>
                     {record.returnedDate && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">Returned:</span>
-                        <span className="font-medium text-gray-700">
-                          {formatDate(record.returnedDate)}
-                        </span>
-                      </div>
+                      <p>Returned: {formatDate(record.returnedDate)}</p>
                     )}
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Duration:</span>
-                      <span className="font-medium text-gray-700">
-                        {duration} day{duration !== 1 ? "s" : ""}
-                      </span>
-                    </div>
+                    <p>
+                      Duration: {duration} day{duration !== 1 ? "s" : ""}
+                    </p>
                     {record.fine && record.fine > 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">Fine:</span>
-                        <span className="font-semibold text-red-600">
-                          ${record.fine.toFixed(2)}
-                        </span>
-                      </div>
+                      <p className="text-red-600 font-medium">
+                        Fine: ${record.fine.toFixed(2)}
+                      </p>
                     )}
                   </div>
                 </div>

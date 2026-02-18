@@ -16,19 +16,29 @@ const SideBar = () => {
   const [activeTab, setActiveTab] = useState("");
   const [userRole, setUserRole] = useState("");
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await authApi.getMe();
-        const role = res.data.role;
-        setUserRole(role);
-        setActiveTab(getActiveTabFromRoute(location.pathname, role));
-      } catch {
-        setUserRole(null);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const res = await authApi.getMe();
+  //       const role = res.data.role;
+  //       setUserRole(role);
+  //       setActiveTab(getActiveTabFromRoute(location.pathname, role));
+  //     } catch {
+  //       setUserRole(null);
+  //     }
+  //   };
 
-    fetchUser();
+  //   fetchUser();
+  // }, [location.pathname]);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserRole(user.role);
+      setActiveTab(getActiveTabFromRoute(location.pathname, user.role));
+    }
   }, [location.pathname]);
 
   const getActiveTabFromRoute = (path, role) => {

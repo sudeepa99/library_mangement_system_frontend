@@ -26,6 +26,7 @@ const BookManagementContent = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [preModalLoading, setPreModalLoading] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -47,8 +48,13 @@ const BookManagementContent = () => {
   };
 
   const handleEditBook = (book) => {
-    setSelectedBook(book);
-    setIsEditBookDialogOpen(true);
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setSelectedBook(book);
+      setPreModalLoading(false);
+      setIsEditBookDialogOpen(true);
+    }, 1500);
   };
 
   const handleCloseEditBookDialog = () => {
@@ -57,8 +63,13 @@ const BookManagementContent = () => {
   };
 
   const handleDeleteClick = (book) => {
-    setSelectedBook(book);
-    setIsDeleteBookDialogOpen(true);
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setSelectedBook(book);
+      setPreModalLoading(false);
+      setIsDeleteBookDialogOpen(true);
+    }, 1500);
   };
 
   const handleDeleteConfirm = async () => {
@@ -176,7 +187,12 @@ const BookManagementContent = () => {
   };
 
   const handleOpenAddBookDialog = () => {
-    setIsAddBookDialogOpen(true);
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setPreModalLoading(false);
+      setIsAddBookDialogOpen(true);
+    }, 1500);
   };
 
   const handleCloseAddBookDialog = () => {
@@ -360,6 +376,14 @@ const BookManagementContent = () => {
                 })}
               </tbody>
             </table>
+          </div>
+        )}
+        {preModalLoading && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <div className="flex flex-col items-center bg-white p-6 rounded-xl shadow-xl">
+              <div className="w-12 h-12 border-4 border-gray-300 border-t-green-600 rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-800 font-medium">Preparing...</p>
+            </div>
           </div>
         )}
       </div>

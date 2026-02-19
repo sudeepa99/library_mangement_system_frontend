@@ -101,9 +101,6 @@ const BorrowingContent = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Days Remaining
                     </th>
-                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th> */}
                   </>
                 )}
 
@@ -124,9 +121,6 @@ const BorrowingContent = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Fine Amount
                     </th>
-                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th> */}
                   </>
                 )}
 
@@ -194,14 +188,6 @@ const BorrowingContent = () => {
                             : "On time"}
                         </span>
                       </td>
-                      {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-blue-600 hover:text-blue-900 mr-3">
-                        Renew
-                      </button>
-                      <button className="text-green-600 hover:text-green-900">
-                        Return
-                      </button>
-                    </td> */}
                     </>
                   )}
 

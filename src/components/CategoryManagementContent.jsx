@@ -18,6 +18,7 @@ const CategoryManagementContent = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [preModalLoading, setPreModalLoading] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -35,18 +36,36 @@ const CategoryManagementContent = () => {
     }
   };
 
+  const openWithLoader = (callback) => {
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setPreModalLoading(false);
+      callback();
+    }, 1000);
+  };
+
   if (loading) return <PageLoader />;
 
   return (
     <div className="px-[4%] py-[2%]">
       {/* Header */}
+      {preModalLoading && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="flex flex-col items-center bg-white p-6 rounded-xl shadow-xl">
+            <div className="w-12 h-12 border-4 border-gray-300 border-t-green-600 rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-800 font-medium">Preparing...</p>
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">
           Category Management
         </h2>
 
         <button
-          onClick={() => setAddOpen(true)}
+          onClick={() => openWithLoader(() => setAddOpen(true))}
           className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
         >
           Add Category
@@ -58,7 +77,7 @@ const CategoryManagementContent = () => {
         <div className="mt-10 text-center border-2 border-dashed border-gray-300 rounded-lg py-12">
           <p className="text-gray-500 text-lg">No categories available</p>
           <button
-            onClick={() => setAddOpen(true)}
+            onClick={() => openWithLoader(() => setAddOpen(true))}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
           >
             Add First Category
@@ -79,20 +98,24 @@ const CategoryManagementContent = () => {
 
               <div className="flex gap-2">
                 <button
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    setEditOpen(true);
-                  }}
+                  onClick={() =>
+                    openWithLoader(() => {
+                      setSelectedCategory(category);
+                      setEditOpen(true);
+                    })
+                  }
                   className="p-2 bg-blue-100 rounded-lg hover:bg-blue-200"
                 >
                   <img src={editIcon} alt="Edit" className="w-4 h-4" />
                 </button>
 
                 <button
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    setDeleteOpen(true);
-                  }}
+                  onClick={() =>
+                    openWithLoader(() => {
+                      setSelectedCategory(category);
+                      setDeleteOpen(true);
+                    })
+                  }
                   className="p-2 bg-red-100 rounded-lg hover:bg-red-200"
                 >
                   <img src={deleteIcon} alt="Delete" className="w-4 h-4" />

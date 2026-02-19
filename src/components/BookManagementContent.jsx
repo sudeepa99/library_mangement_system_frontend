@@ -26,6 +26,7 @@ const BookManagementContent = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [preModalLoading, setPreModalLoading] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -47,8 +48,13 @@ const BookManagementContent = () => {
   };
 
   const handleEditBook = (book) => {
-    setSelectedBook(book);
-    setIsEditBookDialogOpen(true);
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setSelectedBook(book);
+      setPreModalLoading(false);
+      setIsEditBookDialogOpen(true);
+    }, 1500);
   };
 
   const handleCloseEditBookDialog = () => {
@@ -57,8 +63,13 @@ const BookManagementContent = () => {
   };
 
   const handleDeleteClick = (book) => {
-    setSelectedBook(book);
-    setIsDeleteBookDialogOpen(true);
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setSelectedBook(book);
+      setPreModalLoading(false);
+      setIsDeleteBookDialogOpen(true);
+    }, 1500);
   };
 
   const handleDeleteConfirm = async () => {
@@ -176,7 +187,12 @@ const BookManagementContent = () => {
   };
 
   const handleOpenAddBookDialog = () => {
-    setIsAddBookDialogOpen(true);
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setPreModalLoading(false);
+      setIsAddBookDialogOpen(true);
+    }, 1500);
   };
 
   const handleCloseAddBookDialog = () => {
@@ -236,138 +252,139 @@ const BookManagementContent = () => {
             </button>
           </div>
         ) : (
-          <table className="min-w-full border-separate border-spacing-y-4 items-center text-center ">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="bg-gray-50">
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="px-4 py-3 text-center text-sm font-semibold text-gray-700"
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
+          <div className="max-h-[60vh] overflow-y-auto rounded-lg scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
+            <table className="min-w-full border-separate border-spacing-y-4 items-center text-center ">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id} className="bg-gray-50">
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="px-4 py-3 text-center text-sm font-semibold text-gray-700"
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
 
-            <tbody>
-              {table.getRowModel().rows.map((row) => {
-                const book = row.original.originalData;
+              <tbody>
+                {table.getRowModel().rows.map((row) => {
+                  const book = row.original.originalData;
 
-                return (
-                  <React.Fragment key={row.id}>
-                    <tr className="bg-white hover:bg-gray-50 transition-colors">
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-3 text-center border-t border-b"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-
-                    {row.getIsExpanded() && (
-                      <tr className="bg-gray-100">
-                        <td colSpan={columns.length} className="px-4 py-4">
-                          <div className="flex justify-between items-center">
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
-                              {/* <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  ISBN
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  {book.isbn || "N/A"}
-                                </p>
-                              </div> */}
-
-                              <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  Publisher
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  {book.publisher || "N/A"}
-                                </p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  Available Copies
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  {book.availableCopies || "N/A"}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  Added Date
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  {formatDate(book.createdAt)}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  Availability
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  <span
-                                    className={`px-2 py-1 rounded-full text-xs ${
-                                      book.availableCopies > 0
-                                        ? "bg-green-100 text-green-800"
-                                        : "bg-red-100 text-red-800"
-                                    }`}
-                                  >
-                                    {book.availableCopies > 0
-                                      ? "Available"
-                                      : "Out of Stock"}
-                                  </span>
-                                </p>
-                              </div>
-                            </div>
-
-                            <div className="flex gap-3 ml-4">
-                              <button
-                                onClick={() => handleEditBook(book)}
-                                className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
-                                title="Edit Book"
-                              >
-                                <img
-                                  src={editIcon}
-                                  alt="Edit"
-                                  className="w-5 h-5"
-                                />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteClick(book)}
-                                className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                                title="Delete Book"
-                              >
-                                <img
-                                  src={deleteIcon}
-                                  alt="Delete"
-                                  className="w-5 h-5"
-                                />
-                              </button>
-                            </div>
-                          </div>
-                        </td>
+                  return (
+                    <React.Fragment key={row.id}>
+                      <tr className="bg-white hover:bg-gray-50 transition-colors">
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-3 text-center border-t border-b"
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </td>
+                        ))}
                       </tr>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </table>
+
+                      {row.getIsExpanded() && (
+                        <tr className="bg-gray-100">
+                          <td colSpan={columns.length} className="px-4 py-4">
+                            <div className="flex justify-between items-center">
+                              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+                                <div>
+                                  <p className="text-sm text-gray-500 font-medium">
+                                    Publisher
+                                  </p>
+                                  <p className="text-lg font-semibold">
+                                    {book.publisher || "N/A"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-gray-500 font-medium">
+                                    Available Copies
+                                  </p>
+                                  <p className="text-lg font-semibold">
+                                    {book.availableCopies || "N/A"}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <p className="text-sm text-gray-500 font-medium">
+                                    Added Date
+                                  </p>
+                                  <p className="text-lg font-semibold">
+                                    {formatDate(book.createdAt)}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <p className="text-sm text-gray-500 font-medium">
+                                    Availability
+                                  </p>
+                                  <p className="text-lg font-semibold">
+                                    <span
+                                      className={`px-2 py-1 rounded-full text-xs ${
+                                        book.availableCopies > 0
+                                          ? "bg-green-100 text-green-800"
+                                          : "bg-red-100 text-red-800"
+                                      }`}
+                                    >
+                                      {book.availableCopies > 0
+                                        ? "Available"
+                                        : "Out of Stock"}
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex gap-3 ml-4">
+                                <button
+                                  onClick={() => handleEditBook(book)}
+                                  className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                                  title="Edit Book"
+                                >
+                                  <img
+                                    src={editIcon}
+                                    alt="Edit"
+                                    className="w-5 h-5"
+                                  />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteClick(book)}
+                                  className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                                  title="Delete Book"
+                                >
+                                  <img
+                                    src={deleteIcon}
+                                    alt="Delete"
+                                    className="w-5 h-5"
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {preModalLoading && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <div className="flex flex-col items-center bg-white p-6 rounded-xl shadow-xl">
+              <div className="w-12 h-12 border-4 border-gray-300 border-t-green-600 rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-800 font-medium">Preparing...</p>
+            </div>
+          </div>
         )}
       </div>
 

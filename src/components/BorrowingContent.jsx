@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { borrowingApi } from "../api/borrowings";
+import PageLoader from "./PageLoader";
 
 const BorrowingContent = () => {
   const [activeTab, setActiveTab] = useState("active");
@@ -63,7 +64,10 @@ const BorrowingContent = () => {
   };
 
   const renderTable = () => {
-    if (loading) return <div className="p-4 text-center">Loading...</div>;
+    if (loading) {
+      return <PageLoader />;
+    }
+
     if (error)
       return <div className="p-4 text-center text-red-500">{error}</div>;
     if (filteredBorrowings.length === 0) {
@@ -75,231 +79,219 @@ const BorrowingContent = () => {
     }
 
     return (
-      <div className="overflow-x-auto border border-gray-200 rounded-lg px-[4%] py-[2%]">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {activeTab === "active" && (
-                <>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Book
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Borrowed Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Due Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Days Remaining
-                  </th>
-                  {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th> */}
-                </>
-              )}
-
-              {activeTab === "overdue" && (
-                <>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Book
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Due Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Overdue Days
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Fine Amount
-                  </th>
-                  {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th> */}
-                </>
-              )}
-
-              {activeTab === "returned" && (
-                <>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Book
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Borrowed Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Returned Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Fine Paid
-                  </th>
-                </>
-              )}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredBorrowings.map((borrowing) => (
-              <tr key={borrowing._id} className="hover:bg-gray-50">
-                {/* Active Borrowings */}
+      <div className="border border-gray-200 rounded-lg px-[4%] py-[2%] flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-auto scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
+          <table className="min-w-full divide-y divide-gray-200 text-sm sm:text-base">
+            <thead className="bg-gray-50 sticky top-0 z-10">
+              <tr>
                 {activeTab === "active" && (
                   <>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {borrowing.user.name ?? "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {borrowing.user.email ?? "N/A"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {borrowing.book.title ?? "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {borrowing.book.author ?? "N/A"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.borrowedDate) ?? "N/A"}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.dueDate) ?? "N/A"}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          calculateOverdueDays(borrowing.dueDate) > 0
-                            ? "bg-red-100 text-red-800"
-                            : "bg-green-100 text-green-800"
-                        }`}
-                      >
-                        {calculateOverdueDays(borrowing.dueDate) > 0
-                          ? `Overdue by ${calculateOverdueDays(
-                              borrowing.dueDate,
-                            )} days`
-                          : "On time"}
-                      </span>
-                    </td>
-                    {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-blue-600 hover:text-blue-900 mr-3">
-                        Renew
-                      </button>
-                      <button className="text-green-600 hover:text-green-900">
-                        Return
-                      </button>
-                    </td> */}
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      User
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Book
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Borrowed Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Due Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Days Remaining
+                    </th>
                   </>
                 )}
 
-                {/* Overdue Borrowings */}
                 {activeTab === "overdue" && (
                   <>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {borrowing.user.name ?? "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {borrowing.user.email ?? "N/A"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {borrowing.book.title ?? "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {borrowing.book.author ?? "N/A"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.dueDate) ?? "N/A"}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
-                        {calculateOverdueDays(borrowing.dueDate)} days
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      ${calculateFine(borrowing.dueDate).toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-green-600 hover:text-green-900 mr-3">
-                        Return
-                      </button>
-                      <button className="text-purple-600 hover:text-purple-900">
-                        Charge Fine
-                      </button>
-                    </td>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      User
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Book
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Due Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Overdue Days
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Fine Amount
+                    </th>
                   </>
                 )}
 
-                {/* Returned Borrowings */}
                 {activeTab === "returned" && (
                   <>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {borrowing.user.name ?? "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {borrowing.user.email ?? "N/A"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {borrowing.book.title ?? "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {borrowing.book.author ?? "N/A"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(borrowing.borrowedDate) ?? "N/A"}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(
-                        borrowing.returnedDate || borrowing.dueDate,
-                      ) ?? "N/A"}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          borrowing.fine > 0
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        ${borrowing.fine ? borrowing.fine.toFixed(2) : "0.00"}
-                      </span>
-                    </td>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      User
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Book
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Borrowed Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Returned Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Fine Paid
+                    </th>
                   </>
                 )}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredBorrowings.map((borrowing) => (
+                <tr key={borrowing._id} className="hover:bg-gray-50">
+                  {/* Active Borrowings */}
+                  {activeTab === "active" && (
+                    <>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {borrowing.user.name ?? "N/A"}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {borrowing.user.email ?? "N/A"}
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {borrowing.book.title ?? "N/A"}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {borrowing.book.author ?? "N/A"}
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        {formatDate(borrowing.borrowedDate) ?? "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {formatDate(borrowing.dueDate) ?? "N/A"}
+                      </td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            calculateOverdueDays(borrowing.dueDate) > 0
+                              ? "bg-red-100 text-red-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
+                        >
+                          {calculateOverdueDays(borrowing.dueDate) > 0
+                            ? `Overdue by ${calculateOverdueDays(
+                                borrowing.dueDate,
+                              )} days`
+                            : "On time"}
+                        </span>
+                      </td>
+                    </>
+                  )}
+
+                  {/* Overdue Borrowings */}
+                  {activeTab === "overdue" && (
+                    <>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {borrowing.user.name ?? "N/A"}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {borrowing.user.email ?? "N/A"}
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {borrowing.book.title ?? "N/A"}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {borrowing.book.author ?? "N/A"}
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-500">
+                        {formatDate(borrowing.dueDate) ?? "N/A"}
+                      </td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                          {calculateOverdueDays(borrowing.dueDate)} days
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        ${calculateFine(borrowing.dueDate).toFixed(2)}
+                      </td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
+                        <button className="text-green-600 hover:text-green-900 mr-3">
+                          Return
+                        </button>
+                        <button className="text-purple-600 hover:text-purple-900">
+                          Charge Fine
+                        </button>
+                      </td>
+                    </>
+                  )}
+
+                  {/* Returned Borrowings */}
+                  {activeTab === "returned" && (
+                    <>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {borrowing.user.name ?? "N/A"}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {borrowing.user.email ?? "N/A"}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {borrowing.book.title ?? "N/A"}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {borrowing.book.author ?? "N/A"}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {formatDate(borrowing.borrowedDate) ?? "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {formatDate(
+                          borrowing.returnedDate || borrowing.dueDate,
+                        ) ?? "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            borrowing.fine > 0
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          ${borrowing.fine ? borrowing.fine.toFixed(2) : "0.00"}
+                        </span>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="p-4">
+    <div className="p-3 sm:p-4 md:p-6 h-full flex flex-col overflow-hidden">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Borrowing Management
       </h2>
 
       {/* Tab Navigation */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         <button
           onClick={() => setActiveTab("active")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+          className={`px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg font-medium transition-all duration-200 ${
             activeTab === "active"
               ? "bg-blue-500 text-white shadow-md"
               : "border border-gray-300 text-gray-600 hover:bg-gray-50"
@@ -311,7 +303,7 @@ const BorrowingContent = () => {
 
         <button
           onClick={() => setActiveTab("overdue")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+          className={`px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg font-medium transition-all duration-200 ${
             activeTab === "overdue"
               ? "bg-red-500 text-white shadow-md"
               : "border border-gray-300 text-gray-600 hover:bg-gray-50"
@@ -330,7 +322,7 @@ const BorrowingContent = () => {
 
         <button
           onClick={() => setActiveTab("returned")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+          className={`px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg font-medium transition-all duration-200 ${
             activeTab === "returned"
               ? "bg-green-500 text-white shadow-md"
               : "border border-gray-300 text-gray-500 hover:bg-gray-50"

@@ -76,12 +76,12 @@ const AdminDashboardContent = () => {
   ];
 
   return (
-    <div className="px-[4%] py-[2%]">
+    <div className="px-[4%] py-[2%] h-full  ">
       <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Statistics</h2>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 overflow-y-auto scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f] ">
         {staticsItems.map((item, index) => (
           <div
             key={index}

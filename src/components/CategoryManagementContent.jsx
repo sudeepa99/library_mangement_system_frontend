@@ -60,13 +60,13 @@ const CategoryManagementContent = () => {
       )}
 
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">
+        <h2 className="text-lg md:text-xl lg:text-2xl  font-bold text-gray-800">
           Category Management
         </h2>
 
         <button
           onClick={() => openWithLoader(() => setAddOpen(true))}
-          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+          className="px-2 py-1 md:px-4 md:py-2   bg-green-600 text-white rounded-md hover:bg-green-700 transition font-bold "
         >
           Add Category
         </button>
@@ -75,23 +75,25 @@ const CategoryManagementContent = () => {
       {/* Empty State */}
       {categories.length === 0 ? (
         <div className="mt-10 text-center border-2 border-dashed border-gray-300 rounded-lg py-12">
-          <p className="text-gray-500 text-lg">No categories available</p>
+          <p className="text-gray-500 text-sm md:text-lg ">
+            No categories available
+          </p>
           <button
             onClick={() => openWithLoader(() => setAddOpen(true))}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+            className="mt-4 px-2 py-1 md:px-4 md:py-2  bg-blue-600 text-white rounded"
           >
             Add First Category
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+        <div className="grid grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
           {categories.map((category) => (
             <div
               key={category._id}
               className="bg-white border rounded-xl shadow-sm hover:shadow-md transition p-5 flex justify-between items-center"
             >
               <div>
-                <p className="text-lg font-semibold text-gray-800">
+                <p className="text-sm md:text-lg font-semibold text-gray-800">
                   {category.name}
                 </p>
               </div>
@@ -104,9 +106,17 @@ const CategoryManagementContent = () => {
                       setEditOpen(true);
                     })
                   }
-                  className="p-2 bg-blue-100 rounded-lg hover:bg-blue-200"
+                  className="flex items-center justify-center 
+             w-8 h-8 sm:w-10 sm:h-10 
+             bg-blue-100 rounded-lg 
+             hover:bg-blue-200 active:scale-95 
+             transition"
                 >
-                  <img src={editIcon} alt="Edit" className="w-4 h-4" />
+                  <img
+                    src={editIcon}
+                    alt="Edit"
+                    className="w-2 h-2 md:w-4 md:h-4"
+                  />
                 </button>
 
                 <button
@@ -116,9 +126,17 @@ const CategoryManagementContent = () => {
                       setDeleteOpen(true);
                     })
                   }
-                  className="p-2 bg-red-100 rounded-lg hover:bg-red-200"
+                  className="flex items-center justify-center 
+             w-8 h-8 sm:w-10 sm:h-10 
+             bg-red-100 rounded-lg 
+             hover:bg-red-200 active:scale-95 
+             transition"
                 >
-                  <img src={deleteIcon} alt="Delete" className="w-4 h-4" />
+                  <img
+                    src={deleteIcon}
+                    alt="Delete"
+                    className="w-2 h-2 md:w-4 md:h-4"
+                  />
                 </button>
               </div>
             </div>

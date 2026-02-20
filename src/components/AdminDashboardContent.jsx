@@ -53,6 +53,10 @@ const AdminDashboardContent = () => {
     return <PageLoader />;
   }
 
+  const overdueActivities = recentActivity.filter(
+    (item) => item.status === "Borrowed" && new Date(item.dueDate) < new Date(),
+  );
+
   const staticsItems = [
     {
       name: "Total Books",
@@ -225,7 +229,11 @@ const AdminDashboardContent = () => {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
               <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
-                <span className="text-red-600 text-lg">⚠️</span>
+                <img
+                  src={overdueBooksIcon}
+                  alt="Overdue Alerts"
+                  className="h-6 w-6"
+                />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-800">
@@ -237,37 +245,56 @@ const AdminDashboardContent = () => {
               </div>
             </div>
             <span className="text-sm font-semibold text-red-600">
-              {buttonItems.length} Urgent
+              {overdueActivities.length} Urgent
             </span>
           </div>
 
           <div className="space-y-4">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="bg-white rounded-lg border border-red-100 p-4"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-800">Jane Smith</p>
-                    <p className="text-sm text-gray-600">
-                      "1984" by George Orwell
-                    </p>
+            {overdueActivities.length > 0 ? (
+              overdueActivities.map((item) => (
+                <div
+                  key={item._id}
+                  className="bg-white rounded-lg border border-red-100 p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        {item.user.name}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        "{item.book.title}"
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-red-600">
+                        {Math.ceil(
+                          (new Date() - new Date(item.dueDate)) /
+                            (1000 * 60 * 60 * 24),
+                        )}{" "}
+                        days overdue
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Fine: ${item.fine}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold text-red-600">
-                      5 days overdue
-                    </p>
-                    <p className="text-xs text-gray-500">Fine: $5.00</p>
+                  <div className="mt-3 pt-3 border-t border-red-100">
+                    <button
+                      // onClick={() =>
+                      //   handleSendReminder(item.user._id, item.book._id)
+                      // }
+                      className="w-full py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      Send Reminder
+                    </button>
                   </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-red-100">
-                  <button className="w-full py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors">
-                    Send Reminder
-                  </button>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-6 text-gray-500 font-semibold">
+                No overdue borrowings at the moment
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

@@ -34,6 +34,16 @@ export const authApi = {
       throw error;
     }
   },
+  updateMe: async (data) => {
+    try {
+      const response = await api.put("/auth/update-me", {
+        data,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   sendOTPCode: async (email) => {
     try {
       const response = await api.post("/auth/forgot-password/send-code", email);

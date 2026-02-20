@@ -2,8 +2,11 @@ import logo from "../assets/logo Readify.png";
 import searchIcon from "../assets/icons/search.png";
 import notificationIcon from "../assets/icons/bell.png";
 import { useAuth } from "../contexts/authContext";
+import { useState } from "react";
+import ProfileDrawer from "./ProfileDrawer";
 const Header = () => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   return (
     <div className="grid grid-cols-3 items-start px-6 py-4  shadow-md min-w-fit">
       <div className="flex items-center">
@@ -50,11 +53,20 @@ const Header = () => {
             <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
           </button>
 
-          <div className="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center text-white font-bold">
+          <button
+            className="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center text-white font-bold"
+            onClick={() => setIsProfileOpen(true)}
+          >
             {user?.name?.charAt(0) || "U"}
-          </div>
+          </button>
         </div>
       </div>
+      <ProfileDrawer
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        user={user}
+        refreshUser={refreshUser}
+      />
     </div>
   );
 };

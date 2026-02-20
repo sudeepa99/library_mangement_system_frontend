@@ -24,6 +24,7 @@ const UserManagementContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [preModalLoading, setPreModalLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -66,18 +67,15 @@ const UserManagementContent = () => {
     setDeleteLoading(true);
     try {
       await userApi.deleteUser(selectedUser._id);
-
       setIsDeleteUserDialogOpen(false);
       setSelectedUser(null);
-
       fetchUsers();
-
       toast.success("User deleted successfully!");
     } catch (err) {
       console.error("Error deleting user:", err);
       toast.error(
         err.response?.data?.message ||
-          "Failed to delete user. Please try again."
+          "Failed to delete user. Please try again.",
       );
     } finally {
       setDeleteLoading(false);
@@ -90,10 +88,8 @@ const UserManagementContent = () => {
     setDeleteLoading(false);
   };
 
-  // Filter users based on search
   const filteredUsers = useMemo(() => {
     if (!searchTerm) return users;
-
     return users.filter((user) => {
       return (
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -159,8 +155,8 @@ const UserManagementContent = () => {
                 status === "Active"
                   ? "bg-green-100 text-green-800"
                   : status === "Suspended"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-gray-100 text-gray-800"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-gray-100 text-gray-800"
               }`}
             >
               {status}
@@ -189,7 +185,7 @@ const UserManagementContent = () => {
         },
       },
     ],
-    []
+    [],
   );
 
   const table = useReactTable({
@@ -215,7 +211,7 @@ const UserManagementContent = () => {
 
   if (loading) {
     return (
-      <div className="px-[4%] py-[2%] flex justify-center items-center h-64">
+      <div className="flex justify-center items-center h-full">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading users...</p>
@@ -224,9 +220,26 @@ const UserManagementContent = () => {
     );
   }
 
+  const openWithLoader = (callback) => {
+    setPreModalLoading(true);
+
+    setTimeout(() => {
+      setPreModalLoading(false);
+      callback();
+    }, 1000);
+  };
+
   return (
-    <div className="px-[4%] py-[2%]">
-      <div className="flex flex-1 justify-between items-center">
+    <div className="p-4 sm:p-6 h-full flex flex-col overflow-hidden">
+      {preModalLoading && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="flex flex-col items-center bg-white p-6 rounded-xl shadow-xl">
+            <div className="w-12 h-12 border-4 border-gray-300 border-t-green-600 rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-800 font-medium">Preparing...</p>
+          </div>
+        </div>
+      )}
+      <div className="flex flex-shrink-0 justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
         <div className="flex gap-4">
           <div className="bg-gray-100 rounded-md px-4 py-2">
@@ -235,7 +248,7 @@ const UserManagementContent = () => {
         </div>
       </div>
 
-      <div className="mt-6 bg-white p-4 rounded-lg shadow border">
+      <div className="mt-6 flex-shrink-0 bg-white p-4 rounded-lg shadow border">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <input
@@ -257,7 +270,7 @@ const UserManagementContent = () => {
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-6 flex-1 min-h-0">
         {tableData.length === 0 ? (
           <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
             <p className="text-gray-500 text-lg">
@@ -267,120 +280,126 @@ const UserManagementContent = () => {
             </p>
           </div>
         ) : (
-          <table className="min-w-full border-separate border-spacing-y-4 items-center text-center">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="bg-gray-50">
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="px-4 py-3 text-center text-sm font-semibold text-gray-700"
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-
-            <tbody>
-              {table.getRowModel().rows.map((row) => {
-                const user = row.original.originalData;
-
-                return (
-                  <React.Fragment key={row.id}>
-                    <tr className="bg-white hover:bg-gray-50 transition-colors">
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-3 text-center border-t border-b"
+          <div className="h-full rounded-lg border border-gray-200 shadow overflow-hidden">
+            <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
+              <table className="min-w-full border-separate border-spacing-y-4 items-center text-center">
+                <thead className="sticky top-0 bg-gray-50 z-10 shadow-sm">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id} className="bg-gray-50">
+                      {headerGroup.headers.map((header) => (
+                        <th
+                          key={header.id}
+                          className="px-4 py-3 text-center text-sm font-semibold text-gray-700"
                         >
                           {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
+                            header.column.columnDef.header,
+                            header.getContext(),
                           )}
-                        </td>
+                        </th>
                       ))}
                     </tr>
+                  ))}
+                </thead>
 
-                    {row.getIsExpanded() && (
-                      <tr className="bg-gray-100">
-                        <td colSpan={columns.length} className="px-4 py-4">
-                          <div className="flex justify-between items-center">
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
-                              <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  User ID
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  {user._id?.substring(0, 8)}...
-                                </p>
+                <tbody>
+                  {table.getRowModel().rows.map((row) => {
+                    const user = row.original.originalData;
+
+                    return (
+                      <React.Fragment key={row.id}>
+                        <tr className="bg-white hover:bg-gray-50 transition-colors">
+                          {row.getVisibleCells().map((cell) => (
+                            <td
+                              key={cell.id}
+                              className="px-4 py-3 text-center border-t border-b"
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+
+                        {row.getIsExpanded() && (
+                          <tr className="bg-gray-100">
+                            <td colSpan={columns.length} className="px-4 py-4">
+                              <div className="flex justify-between items-center">
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+                                  <div>
+                                    <p className="text-sm text-gray-500 font-medium">
+                                      User ID
+                                    </p>
+                                    <p className="text-lg font-semibold">
+                                      {user._id?.substring(0, 8)}...
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-gray-500 font-medium">
+                                      Registration Date
+                                    </p>
+                                    <p className="text-lg font-semibold">
+                                      {formatDate(user.createdAt)}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-gray-500 font-medium">
+                                      Phone
+                                    </p>
+                                    <p className="text-lg font-semibold">
+                                      {user.phone || "N/A"}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-gray-500 font-medium">
+                                      Active Borrowings
+                                    </p>
+                                    <p className="text-lg font-semibold">
+                                      {user.activeBorrowings?.length || 0}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex gap-3 ml-4">
+                                  <button
+                                    onClick={() =>
+                                      openWithLoader(() => handleEditUser(user))
+                                    }
+                                    className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                                    title="Edit User"
+                                  >
+                                    <img
+                                      src={editIcon}
+                                      alt="Edit"
+                                      className="w-5 h-5"
+                                    />
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      openWithLoader(() =>
+                                        handleDeleteClick(user),
+                                      )
+                                    }
+                                    className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                                    title="Delete User"
+                                  >
+                                    <img
+                                      src={deleteIcon}
+                                      alt="Delete"
+                                      className="w-5 h-5"
+                                    />
+                                  </button>
+                                </div>
                               </div>
-
-                              <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  Registration Date
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  {formatDate(user.createdAt)}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  Phone
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  {user.phone || "N/A"}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="text-sm text-gray-500 font-medium">
-                                  Active Borrowings
-                                </p>
-                                <p className="text-lg font-semibold">
-                                  {user.activeBorrowings?.length || 0}
-                                </p>
-                              </div>
-                            </div>
-
-                            <div className="flex gap-3 ml-4">
-                              <button
-                                onClick={() => handleEditUser(user)}
-                                className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
-                                title="Edit User"
-                              >
-                                <img
-                                  src={editIcon}
-                                  alt="Edit"
-                                  className="w-5 h-5"
-                                />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteClick(user)}
-                                className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                                title="Delete User"
-                              >
-                                <img
-                                  src={deleteIcon}
-                                  alt="Delete"
-                                  className="w-5 h-5"
-                                />
-                              </button>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </table>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
         )}
       </div>
 
@@ -390,7 +409,6 @@ const UserManagementContent = () => {
         userData={selectedUser}
         refreshUsers={fetchUsers}
       />
-
       <DeleteUser
         isOpen={isDeleteUserDialogOpen}
         onClose={handleCloseDeleteDialog}

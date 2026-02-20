@@ -3,8 +3,9 @@ import searchIcon from "../assets/icons/search.png";
 import notificationIcon from "../assets/icons/bell.png";
 import { useAuth } from "../contexts/authContext";
 import { useState } from "react";
+import ProfileDrawer from "./ProfileDrawer";
 const Header = () => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   return (
     <div className="grid grid-cols-3 items-start px-6 py-4  shadow-md min-w-fit">
@@ -60,6 +61,12 @@ const Header = () => {
           </button>
         </div>
       </div>
+      <ProfileDrawer
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        user={user}
+        refreshUser={refreshUser}
+      />
     </div>
   );
 };

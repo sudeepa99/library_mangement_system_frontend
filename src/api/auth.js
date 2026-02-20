@@ -36,9 +36,7 @@ export const authApi = {
   },
   updateMe: async (data) => {
     try {
-      const response = await api.put("/auth/update-me", {
-        data,
-      });
+      const response = await api.put("/auth/update-me", data);
       return response.data;
     } catch (error) {
       throw error;

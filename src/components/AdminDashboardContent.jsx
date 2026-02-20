@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { dashboardApi } from "../api/dashboard";
 import { toast } from "react-toastify";
 import PageLoader from "./PageLoader";
+import { notificationApi } from "../api/notification";
 
 const AdminDashboardContent = () => {
   const [stats, setStats] = useState(null);
@@ -56,6 +57,15 @@ const AdminDashboardContent = () => {
   const overdueActivities = recentActivity.filter(
     (item) => item.status === "Borrowed" && new Date(item.dueDate) < new Date(),
   );
+
+  const handleSendReminder = async (userId, bookId) => {
+    try {
+      await notificationApi.sendOverdueReminder(userId, bookId);
+      toast.success("Reminder sent successfully");
+    } catch (error) {
+      toast.error("Failed to send reminder");
+    }
+  };
 
   const staticsItems = [
     {
@@ -217,7 +227,9 @@ const AdminDashboardContent = () => {
                     {item.status}
                   </span>
                   <p className="text-xs text-gray-500 mt-1">
-                    {new Date(item.activityDate).toLocaleDateString()}
+                    {new Date(
+                      item.returnedDate || item.borrowedDate,
+                    ).toLocaleDateString()}{" "}
                   </p>
                 </div>
               </div>
@@ -280,9 +292,9 @@ const AdminDashboardContent = () => {
                   </div>
                   <div className="mt-3 pt-3 border-t border-red-100">
                     <button
-                      // onClick={() =>
-                      //   handleSendReminder(item.user._id, item.book._id)
-                      // }
+                      onClick={() =>
+                        handleSendReminder(item.user._id, item.book._id)
+                      }
                       className="w-full py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
                     >
                       Send Reminder

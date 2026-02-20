@@ -21,13 +21,13 @@ const DeleteUser = ({ isOpen, onClose, userData, onConfirm, isLoading }) => {
           </div>
 
           <h2 className="text-xl font-bold mb-2">Delete User</h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-6 text-left">
             Are you sure you want to delete user{" "}
             <span className="font-semibold">{userData.name}</span>? This action
             cannot be undone.
           </p>
 
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-end gap-3">
             <button
               type="button"
               onClick={onClose}

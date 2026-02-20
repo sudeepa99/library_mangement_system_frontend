@@ -7,8 +7,12 @@ import manageUserIcon from "../assets/icons/users-round.png";
 import borrowingIcon from "../assets/icons/book-open.png";
 import returnIcon from "../assets/icons/corner-down-left.png";
 import addBookIcon from "../assets/icons/book-copy.png";
+import { useState } from "react";
 
 const AdminDashboardContent = () => {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const staticsItems = [
     {
       name: "Total Books",

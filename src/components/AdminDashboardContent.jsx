@@ -15,21 +15,38 @@ import PageLoader from "./PageLoader";
 const AdminDashboardContent = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [recentActivity, setRecentActivity] = useState([]);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const data = await dashboardApi.getDashboardStats();
-        console.log("Data", data);
         setStats(data.data);
       } catch (error) {
         toast.error("Failed to load dashboard statistics");
+      }
+    };
+
+    const fetchRecentActivity = async () => {
+      try {
+        const res = await dashboardApi.getRecentActivity();
+        setRecentActivity(res.data);
+      } catch (error) {
+        toast.error("Failed to load recent activity");
+      }
+    };
+
+    const loadDashboardData = async () => {
+      try {
+        setLoading(true);
+        await fetchStats();
+        await fetchRecentActivity();
       } finally {
         setLoading(false);
       }
     };
 
-    fetchStats();
+    loadDashboardData();
   }, []);
 
   if (loading) {
@@ -94,7 +111,7 @@ const AdminDashboardContent = () => {
     },
   ];
   return (
-    <div className="px-[4%] py-[2%] h-full  ">
+    <div className="px-[4%] py-[2%] h-full overflow-y-auto overflow-x-auto scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scroll ">
       <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Statistics</h2>
       </div>
@@ -143,7 +160,11 @@ const AdminDashboardContent = () => {
               key={index}
               className={`${item.bgColor} rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-200 w-full text-center font-medium flex flex-col items-center justify-center min-h-[120px] transform hover:-translate-y-1`}
             >
-              <img src={item.icon} className="h-6 w-6 mb-3" />
+              <img
+                src={item.icon}
+                className="h-6 w-6 mb-3"
+                alt="quick action icons"
+              />
               <span className="font-semibold">{item.name}</span>
             </button>
           ))}
@@ -154,35 +175,46 @@ const AdminDashboardContent = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-gray-800">Recent Activity</h3>
-            <button className="text-sm text-[#009B4D] hover:text-[#00843f] font-medium">
+            {/* <button className="text-sm text-[#009B4D] hover:text-[#00843f] font-medium">
               View All →
-            </button>
+            </button> */}
           </div>
 
           <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((item) => (
+            {recentActivity.map((item) => (
               <div
-                key={item}
+                key={item._id}
                 className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg"
               >
                 <div className="flex items-center">
                   <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                    <span className="text-blue-600 font-medium">JD</span>
+                    <span className="text-blue-600 font-medium">
+                      {item.user.name.charAt(0)}
+                    </span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-800">
-                      John Doe
+                      {item.user.name}
                     </p>
                     <p className="text-xs text-gray-500">
-                      Borrowed "The Great Gatsby"
+                      {item.status === "Returned" ? "Returned" : "Borrowed"} "
+                      {item.book.title}"
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-1 rounded">
-                    Active
+                  <span
+                    className={`text-xs font-medium px-2 py-1 rounded ${
+                      item.status === "Returned"
+                        ? "bg-gray-100 text-gray-800"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    {item.status}
                   </span>
-                  <p className="text-xs text-gray-500 mt-1">2 days ago</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {new Date(item.activityDate).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
             ))}

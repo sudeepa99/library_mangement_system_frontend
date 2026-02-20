@@ -7,52 +7,67 @@ import manageUserIcon from "../assets/icons/users-round.png";
 import borrowingIcon from "../assets/icons/book-open.png";
 import returnIcon from "../assets/icons/corner-down-left.png";
 import addBookIcon from "../assets/icons/book-copy.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { dashboardApi } from "../api/dashboard";
+import { toast } from "react-toastify";
+import PageLoader from "./PageLoader";
 
 const AdminDashboardContent = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await dashboardApi.getDashboardStats();
+        console.log("Data", data);
+        setStats(data.data);
+      } catch (error) {
+        toast.error("Failed to load dashboard statistics");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return <PageLoader />;
+  }
+
   const staticsItems = [
     {
       name: "Total Books",
       icon: bookIcon,
-      value: "3000+",
+      value: stats?.totalBooks || 0,
       color: "bg-blue-50",
       textColor: "text-blue-600",
       iconBg: "bg-blue-100",
-      trend: "+12.5%",
-      trendText: "Increased from last month",
     },
     {
       name: "Available Copies",
       icon: availableCopiesIcon,
-      value: "2300+",
+      value: stats?.availableCopies || 0,
       color: "bg-green-50",
       textColor: "text-green-600",
       iconBg: "bg-green-100",
-      trend: "+8.2%",
-      trendText: "Increased from last month",
     },
     {
       name: "Active Borrowings",
       icon: activeBorrowingsIcon,
-      value: "300",
+      value: stats?.activeBorrowings || 0,
       color: "bg-yellow-50",
       textColor: "text-yellow-600",
       iconBg: "bg-yellow-100",
-      trend: "+15.3%",
-      trendText: "Increased from last month",
     },
     {
       name: "Overdue Books",
       icon: overdueBooksIcon,
-      value: "18",
+      value: stats?.overdueBooks || 0,
       color: "bg-red-50",
       textColor: "text-red-600",
       iconBg: "bg-red-100",
-      trend: "-5.2%",
-      trendText: "Decreased from last month",
     },
   ];
 
@@ -78,14 +93,13 @@ const AdminDashboardContent = () => {
       icon: manageUserIcon,
     },
   ];
-
   return (
     <div className="px-[4%] py-[2%] h-full  ">
       <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Statistics</h2>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 overflow-y-auto scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f] ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {staticsItems.map((item, index) => (
           <div
             key={index}
@@ -95,29 +109,15 @@ const AdminDashboardContent = () => {
               <div className={`p-3 rounded-xl ${item.iconBg}`}>
                 <img src={item.icon} alt={item.name} className="h-6 w-6" />
               </div>
-              <span
-                className={`text-sm font-medium px-3 py-1 rounded-full ${item.iconBg} ${item.textColor}`}
-              >
-                {item.trend}
-              </span>
             </div>
 
-            <div className="mb-4">
-              <p className="text-3xl font-bold text-gray-800 mb-2 text-center">
+            <div className="mb-4 text-center">
+              <p className="text-3xl font-bold text-gray-800 mb-2">
                 {item.value}
               </p>
-              <p
-                className={`text-sm font-semibold ${item.textColor} text-center`}
-              >
+              <p className={`text-sm font-semibold ${item.textColor}`}>
                 {item.name}
               </p>
-            </div>
-
-            <div className="pt-4 border-t border-gray-200">
-              <div className="flex items-center justify-center text-xs text-gray-600">
-                <span className="mr-2">📈</span>
-                <span className="text-center">{item.trendText}</span>
-              </div>
             </div>
           </div>
         ))}

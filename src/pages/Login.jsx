@@ -31,20 +31,34 @@ const Login = () => {
     setLoading(true);
     try {
       const res = await authApi.login({ email, password });
-      console.log("Data", res);
-      authLogin(res.token, res.user);
-      toast.success("Logged in Successfully");
+      if (!res?.token || !res?.user?.role) {
+        throw new Error("Invalid server response");
+      }
+
+      const { token, user } = res;
 
       if (res.user.role === "member") {
+        authLogin(token, user);
+        toast.success("Logged in Successfully", { autoClose: 3000 });
         navigate("/member/dashboard");
       } else if (res.user.role === "librarian") {
+        authLogin(token, user);
+        toast.success("Logged in Successfully", { autoClose: 3000 });
         navigate("/admin/dashboard");
       } else {
         toast.error("Role Not Found");
-        navigate("/");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login Failed");
+      const message =
+        error?.response?.data?.error ||
+        error?.message ||
+        "Login failed. Please try again.";
+
+      toast.error(message, {
+        autoClose: 5000,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } finally {
       setLoading(false);
     }

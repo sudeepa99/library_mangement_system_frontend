@@ -9,4 +9,8 @@ export const dashboardApi = {
       throw error;
     }
   },
+  getRecentActivity: async () => {
+    const response = await api.get("dashboard/recent-activity");
+    return response.data;
+  },
 };

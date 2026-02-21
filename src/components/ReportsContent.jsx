@@ -13,6 +13,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  AreaChart,
+  Area,
 } from "recharts";
 import {
   Calendar,
@@ -26,11 +28,15 @@ import {
 import { borrowingApi } from "../api/borrowings";
 import { bookApi } from "../api/books";
 import PageLoader from "./PageLoader";
+import { reportsApi } from "../api/reports";
 
 const ReportContent = () => {
   const [books, setBooks] = useState([]);
   const [borrowings, setBorrowings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [borrowingTrends, setBorrowingTrends] = useState([]);
+  const [period, setPeriod] = useState("12M");
+  const [trendLoading, setTrendLoading] = useState(false);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(new Date().setMonth(new Date().getMonth() - 11))
       .toISOString()
@@ -59,52 +65,51 @@ const ReportContent = () => {
     }
   };
 
-  const borrowingTrends = useMemo(() => {
-    const trends = [];
-    const now = new Date();
+  useEffect(() => {
+    fetchBorrowingTrends();
+  }, [dateRange]);
 
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthName = date.toLocaleDateString("en-US", { month: "short" });
-      const year = date.getFullYear();
+  const fetchBorrowingTrends = async () => {
+    const MIN_LOADING_TIME = 800; // smoother UX (not too long)
+    const startTime = Date.now();
 
-      trends.push({
-        month: `${monthName} ${year}`,
-        borrowings: 0,
-        returns: 0,
+    try {
+      setTrendLoading(true);
+
+      const response = await reportsApi.getBorrowingTrends({
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
       });
+
+      setBorrowingTrends(response.data);
+    } catch (error) {
+      console.error("Error fetching borrowing trends:", error);
+    } finally {
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = MIN_LOADING_TIME - elapsedTime;
+
+      if (remainingTime > 0) {
+        setTimeout(() => {
+          setTrendLoading(false);
+        }, remainingTime);
+      } else {
+        setTrendLoading(false);
+      }
     }
+  };
 
-    borrowings.forEach((borrowing) => {
-      if (borrowing.borrowedDate) {
-        const borrowDate = new Date(borrowing.borrowedDate);
-        const monthYear = borrowDate.toLocaleDateString("en-US", {
-          month: "short",
-          year: "numeric",
-        });
+  const handlePresetChange = (months, label) => {
+    const end = new Date();
+    const start = new Date();
+    start.setMonth(start.getMonth() - months);
 
-        const trend = trends.find((t) => t.month === monthYear);
-        if (trend) {
-          trend.borrowings++;
-        }
-      }
+    setPeriod(label);
 
-      if (borrowing.returnedDate) {
-        const returnDate = new Date(borrowing.returnedDate);
-        const monthYear = returnDate.toLocaleDateString("en-US", {
-          month: "short",
-          year: "numeric",
-        });
-
-        const trend = trends.find((t) => t.month === monthYear);
-        if (trend) {
-          trend.returns++;
-        }
-      }
+    setDateRange({
+      startDate: start.toISOString().split("T")[0],
+      endDate: end.toISOString().split("T")[0],
     });
-
-    return trends;
-  }, [borrowings]);
+  };
 
   const booksByCategory = useMemo(() => {
     const categoryMap = {};
@@ -234,6 +239,7 @@ const ReportContent = () => {
   if (loading) {
     return <PageLoader />;
   }
+
   return (
     <div className="px-[4%] py-[2%]">
       <div className="bg-white rounded-xl shadow-sm border p-6">
@@ -247,31 +253,63 @@ const ReportContent = () => {
           <div className="flex items-center gap-3">
             <Calendar className="w-5 h-5 text-gray-500" />
             <span className="font-medium">Date Range:</span>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-gray-500" />
+              <span className="font-medium">Period:</span>
+
+              {[
+                { label: "3M", value: 3 },
+                { label: "6M", value: 6 },
+                { label: "12M", value: 12 },
+                { label: "24M", value: 24 },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => handlePresetChange(item.value, item.label)}
+                  className={`px-3 py-1 text-sm rounded-md border 
+        ${
+          period === item.label
+            ? "bg-blue-500 text-white border-blue-500"
+            : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+        }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Custom Date Range */}
+            <div className="flex gap-2 items-center">
+              <span className="text-sm text-gray-500">Custom:</span>
               <input
                 type="date"
                 value={dateRange.startDate}
-                onChange={(e) =>
+                onChange={(e) => {
+                  setPeriod("Custom");
                   setDateRange((prev) => ({
                     ...prev,
                     startDate: e.target.value,
-                  }))
-                }
+                  }));
+                }}
                 className="px-3 py-1 border border-gray-300 rounded-md text-sm"
               />
-              <span className="self-center">to</span>
+              <span>to</span>
               <input
                 type="date"
                 value={dateRange.endDate}
-                onChange={(e) =>
-                  setDateRange((prev) => ({ ...prev, endDate: e.target.value }))
-                }
+                onChange={(e) => {
+                  setPeriod("Custom");
+                  setDateRange((prev) => ({
+                    ...prev,
+                    endDate: e.target.value,
+                  }));
+                }}
                 className="px-3 py-1 border border-gray-300 rounded-md text-sm"
               />
             </div>
           </div>
 
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <button
               onClick={handleExportCSV}
               className="px-4 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600"
@@ -284,7 +322,7 @@ const ReportContent = () => {
             >
               PDF
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -292,35 +330,57 @@ const ReportContent = () => {
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
-            Borrowing Trends (Last 12 Months)
+            Borrowing Trends ({period})
           </h3>
         </div>
 
-        <div className="h-72">
+        <div className="h-72 relative">
+          {trendLoading && (
+            <div className="absolute inset-0 px-24 py-10 space-y-2 animate-pulse bg-white/70 ">
+              <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
+              <div className="h-2 bg-gray-200 rounded w-full"></div>
+              <div className="h-2 bg-gray-200 rounded w-5/6"></div>
+              <div className="h-2 bg-gray-200 rounded w-2/3"></div>
+              <div className="h-2 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          )}
+
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={borrowingTrends}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <AreaChart data={borrowingTrends}>
+              <defs>
+                <linearGradient id="colorBorrow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                </linearGradient>
+
+                <linearGradient id="colorReturn" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line
+
+              <Area
                 type="monotone"
                 dataKey="borrowings"
-                name="Borrowings"
-                stroke="#0088FE"
-                strokeWidth={2}
-                activeDot={{ r: 6 }}
+                stroke="#3b82f6"
+                fillOpacity={1}
+                fill="url(#colorBorrow)"
               />
-              <Line
+
+              <Area
                 type="monotone"
                 dataKey="returns"
-                name="Returns"
-                stroke="#00C49F"
-                strokeWidth={2}
-                activeDot={{ r: 6 }}
+                stroke="#10b981"
+                fillOpacity={1}
+                fill="url(#colorReturn)"
               />
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>

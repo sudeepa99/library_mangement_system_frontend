@@ -20,8 +20,6 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
         publisher: formData.publisher || "",
         copies: parseInt(formData.numberOfCopies),
         websiteLink: formData.websiteLink,
-
-        // availableCopies: parseInt(formData.availableCopies),
       };
 
       const response = await bookApi.addBook(bookData);

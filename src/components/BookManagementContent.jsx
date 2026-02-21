@@ -252,9 +252,9 @@ const BookManagementContent = () => {
             </button>
           </div>
         ) : (
-          <div className="max-h-[60vh] overflow-y-auto rounded-lg scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
+          <div className="h-full overflow-y-auto rounded-lg scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
             <table className="min-w-full border-separate border-spacing-y-4 items-center text-center ">
-              <thead>
+              <thead className="sticky top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="bg-gray-50">
                     {headerGroup.headers.map((header) => (

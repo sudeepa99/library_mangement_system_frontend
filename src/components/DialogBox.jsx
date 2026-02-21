@@ -13,7 +13,7 @@ const DialogBox = ({
   initialData = null,
 }) => {
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
   const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({

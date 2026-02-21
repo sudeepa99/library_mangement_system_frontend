@@ -13,6 +13,7 @@ import EditUser from "./EditUser";
 import DeleteUser from "./DeleteUser";
 import { toast } from "react-toastify";
 import { userApi } from "../api/user";
+import PageLoader from "./PageLoader";
 
 const UserManagementContent = () => {
   const [expanded, setExpanded] = useState({});
@@ -210,14 +211,7 @@ const UserManagementContent = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading users...</p>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   const openWithLoader = (callback) => {

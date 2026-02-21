@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { borrowingApi } from "../api/borrowings";
 import { bookApi } from "../api/books";
+import PageLoader from "./PageLoader";
 
 const ReportContent = () => {
   const [books, setBooks] = useState([]);
@@ -231,11 +232,7 @@ const ReportContent = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-      </div>
-    );
+    return <PageLoader />;
   }
   return (
     <div className="px-[4%] py-[2%]">
@@ -244,10 +241,6 @@ const ReportContent = () => {
           <h2 className="text-xl font-bold text-gray-800">
             Reports & Analytics
           </h2>
-          {/* <div className="text-sm text-gray-500">
-            Total Reports Generated:{" "}
-            <span className="font-bold text-blue-600">53</span>
-          </div> */}
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

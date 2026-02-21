@@ -420,9 +420,6 @@ const ReportContent = () => {
             <div className="mt-4 p-3 bg-gray-50 rounded-lg">
               <div className="flex justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">Fiction Readers</p>
-                </div>
-                <div>
                   <p className="text-sm text-gray-500">Avg. Borrows</p>
                   <p className="text-lg font-bold">
                     {topBorrowers.length > 0
@@ -493,18 +490,6 @@ const ReportContent = () => {
                       +{topBooks.length - 3} more books
                     </p>
                   )}
-                </div>
-              </div>
-
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm text-gray-500">Avg. Overdue Days</p>
-                    <p className="text-xl font-bold">
-                      {/* {keyMetrics.avgOverdueDays} */}
-                    </p>
-                  </div>
-                  <Clock className="w-8 h-8 text-orange-500" />
                 </div>
               </div>
             </div>

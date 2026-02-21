@@ -17,4 +17,13 @@ export const reportsApi = {
       throw error;
     }
   },
+
+  getAnalyticsReport: async () => {
+    try {
+      const response = await api.get("/reports/analytics");
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

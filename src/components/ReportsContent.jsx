@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PieChart,
   Pie,
@@ -27,6 +27,9 @@ const ReportContent = () => {
   const [trendLoading, setTrendLoading] = useState(false);
   const [keyMetrics, setKeyMetrics] = useState(null);
   const [loadingMetrics, setLoadingMetrics] = useState(true);
+  const [analytics, setAnalytics] = useState(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(true);
+
   const [dateRange, setDateRange] = useState({
     startDate: new Date(new Date().setMonth(new Date().getMonth() - 11))
       .toISOString()
@@ -112,6 +115,22 @@ const ReportContent = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const res = await reportsApi.getAnalyticsReport();
+        console.log("data", res);
+        setAnalytics(res.data.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingAnalytics(false);
+      }
+    };
+
+    fetchAnalytics();
+  }, []);
+
   const handlePresetChange = (months, label) => {
     const end = new Date();
     const start = new Date();
@@ -125,67 +144,13 @@ const ReportContent = () => {
     });
   };
 
-  const booksByCategory = useMemo(() => {
-    const categoryMap = {};
-
-    books.forEach((book) => {
-      const category = book.category || "Uncategorized";
-      categoryMap[category] = (categoryMap[category] || 0) + 1;
-    });
-
-    return Object.entries(categoryMap).map(([name, value]) => ({
-      name,
-      value,
-      count: value,
-    }));
-  }, [books]);
-
-  const topBooks = useMemo(() => {
-    const bookBorrowCount = {};
-
-    borrowings.forEach((borrowing) => {
-      if (borrowing.book && borrowing.book._id) {
-        const bookId = borrowing.book._id;
-        bookBorrowCount[bookId] = (bookBorrowCount[bookId] || 0) + 1;
-      }
-    });
-
-    return Object.entries(bookBorrowCount)
-      .map(([bookId, count]) => {
-        const book = books.find((b) => b._id === bookId);
-        return book ? { ...book, borrowCount: count } : null;
-      })
-      .filter(Boolean)
-      .sort((a, b) => b.borrowCount - a.borrowCount)
-      .slice(0, 10);
-  }, [borrowings, books]);
-
-  const topBorrowers = useMemo(() => {
-    const userBorrowCount = {};
-
-    borrowings.forEach((borrowing) => {
-      if (borrowing.user && borrowing.user._id) {
-        const userId = borrowing.user._id;
-        userBorrowCount[userId] = {
-          count: (userBorrowCount[userId]?.count || 0) + 1,
-          user: borrowing.user,
-        };
-      }
-    });
-
-    return Object.values(userBorrowCount)
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
-  }, [borrowings]);
-
-  const COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#FFBB28",
-    "#FF8042",
-    "#8884D8",
-    "#82CA9D",
-  ];
+  const EmptyState = ({ icon: Icon, title, description }) => (
+    <div className="flex flex-col items-center justify-center text-center py-10 text-gray-400">
+      {Icon && <Icon className="w-10 h-10 mb-3 opacity-60" />}
+      <p className="font-semibold text-gray-600">{title}</p>
+      <p className="text-sm text-gray-400 mt-1">{description}</p>
+    </div>
+  );
 
   if (loading) {
     return <PageLoader />;
@@ -387,114 +352,149 @@ const ReportContent = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Top 10 Borrowers
-          </h3>
-
-          <div className="space-y-3">
-            {topBorrowers.slice(0, 5).map((borrower, index) => (
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        {loadingAnalytics || !analytics ? (
+          Array(2)
+            .fill(0)
+            .map((_, i) => (
               <div
-                key={borrower.user._id}
-                className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
-                    {index + 1}
-                  </div>
-                  <div>
-                    <p className="font-medium">{borrower.user.name}</p>
-                    <p className="text-sm text-gray-500">
-                      {borrower.user.email}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold">{borrower.count} books</p>
-                </div>
-              </div>
-            ))}
+                key={i}
+                className="h-80 bg-gray-100 rounded-2xl animate-pulse"
+              />
+            ))
+        ) : (
+          <>
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition">
+              <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <Users className="w-5 h-5 text-blue-500" />
+                Top Borrowers
+              </h3>
 
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-              <div className="flex justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Avg. Borrows</p>
-                  <p className="text-lg font-bold">
-                    {topBorrowers.length > 0
-                      ? (
-                          topBorrowers.reduce((sum, b) => sum + b.count, 0) /
-                          topBorrowers.length
-                        ).toFixed(1)
-                      : 0}
-                  </p>
-                </div>
+              <div className="space-y-4">
+                {analytics.topBorrowers.length === 0 ? (
+                  <EmptyState
+                    icon={Users}
+                    title="No Borrowing Data"
+                    description="No users have borrowed books yet."
+                  />
+                ) : (
+                  <>
+                    {analytics.topBorrowers
+                      .slice(0, 5)
+                      .map((borrower, index) => (
+                        <div
+                          key={borrower._id}
+                          className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50 transition"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-9 h-9 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full flex items-center justify-center font-bold text-sm shadow">
+                              {index + 1}
+                            </div>
+
+                            <div>
+                              <p className="font-semibold text-gray-800">
+                                {borrower.user.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {borrower.user.email}
+                              </p>
+                            </div>
+                          </div>
+
+                          <span className="text-blue-600 font-bold">
+                            {borrower.count} books
+                          </span>
+                        </div>
+                      ))}
+                  </>
+                )}
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-xl shadow-sm border p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-6">
-            Book by Category
-          </h3>
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition">
+              <h3 className="text-lg font-bold text-gray-800 mb-6">
+                Books by Category
+              </h3>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={booksByCategory}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
-                    }
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {booksByCategory.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value} books`, "Count"]} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+              <div className="h-72">
+                {analytics.booksByCategory.length === 0 ? (
+                  <EmptyState
+                    icon={BookOpen}
+                    title="No Books Available"
+                    description="No books have been added to the library yet."
+                  />
+                ) : (
+                  <>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={analytics.booksByCategory}
+                          dataKey="value"
+                          nameKey="name"
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={4}
+                        >
+                          {analytics.booksByCategory.map((entry, index) => (
+                            <Cell
+                              key={index}
+                              fill={`hsl(${index * 65}, 70%, 55%)`}
+                            />
+                          ))}
+                        </Pie>
 
-            <div className="space-y-4">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-bold text-gray-700 mb-3">Top 10 Books</h4>
+                        <Tooltip
+                          formatter={(value) => [`${value} books`, "Count"]}
+                        />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </>
+                )}
+              </div>
+
+              <div className="mt-6 bg-gray-50 p-4 rounded-xl">
+                <h4 className="font-semibold text-gray-700 mb-3">
+                  Most Borrowed Books
+                </h4>
+
                 <div className="space-y-2">
-                  {topBooks.slice(0, 3).map((book, index) => (
-                    <div
-                      key={book._id}
-                      className="flex justify-between text-sm"
-                    >
-                      <span className="truncate font-medium">
-                        {index + 1}. {book.title}
-                      </span>
-                      <span className="font-bold text-blue-600">
-                        {book.borrowCount}
-                      </span>
-                    </div>
-                  ))}
-                  {topBooks.length > 3 && (
-                    <p className="text-blue-500 text-sm text-center pt-2">
-                      +{topBooks.length - 3} more books
-                    </p>
+                  {analytics.topBooks.length === 0 ? (
+                    <EmptyState
+                      icon={BookOpen}
+                      title="No Borrowed Books"
+                      description="Books have not been borrowed yet."
+                    />
+                  ) : (
+                    <>
+                      {analytics.topBooks.slice(0, 3).map((book, index) => (
+                        <div
+                          key={book._id}
+                          className="flex justify-between text-sm"
+                        >
+                          <span className="truncate font-medium">
+                            {index + 1}. {book.title}
+                          </span>
+                          <span className="text-indigo-600 font-bold">
+                            {book.borrowCount}
+                          </span>
+                        </div>
+                      ))}
+
+                      {analytics.topBooks.length > 3 && (
+                        <p className="text-center text-xs text-gray-500 pt-2">
+                          +{analytics.topBooks.length - 3} more books
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

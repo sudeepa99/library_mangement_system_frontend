@@ -19,7 +19,9 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
         publishedYear: parseInt(formData.publishedYear) || null,
         publisher: formData.publisher || "",
         copies: parseInt(formData.numberOfCopies),
-        availableCopies: parseInt(formData.availableCopies),
+        websiteLink: formData.websiteLink,
+
+        // availableCopies: parseInt(formData.availableCopies),
       };
 
       const response = await bookApi.addBook(bookData);
@@ -33,7 +35,7 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
     } catch (err) {
       console.error("Error adding book:", err);
       setError(
-        err.response?.data?.message || "Failed to add book. Please try again."
+        err.response?.data?.message || "Failed to add book. Please try again.",
       );
     } finally {
       setIsLoading(false);

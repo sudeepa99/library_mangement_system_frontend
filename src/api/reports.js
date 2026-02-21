@@ -9,4 +9,12 @@ export const reportsApi = {
       throw error;
     }
   },
+  getKeyMetrics: async (params) => {
+    try {
+      const response = await api.get("/reports/key-metrics", { params });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

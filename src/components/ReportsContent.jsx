@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
   PieChart,
   Pie,
   Cell,
@@ -16,15 +12,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import {
-  Calendar,
-  Download,
-  FileText,
-  TrendingUp,
-  BookOpen,
-  Users,
-  Clock,
-} from "lucide-react";
+import { Calendar, TrendingUp, BookOpen, Users, Clock } from "lucide-react";
 import { borrowingApi } from "../api/borrowings";
 import { bookApi } from "../api/books";
 import PageLoader from "./PageLoader";
@@ -37,6 +25,8 @@ const ReportContent = () => {
   const [borrowingTrends, setBorrowingTrends] = useState([]);
   const [period, setPeriod] = useState("12M");
   const [trendLoading, setTrendLoading] = useState(false);
+  const [keyMetrics, setKeyMetrics] = useState(null);
+  const [loadingMetrics, setLoadingMetrics] = useState(true);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(new Date().setMonth(new Date().getMonth() - 11))
       .toISOString()
@@ -70,7 +60,7 @@ const ReportContent = () => {
   }, [dateRange]);
 
   const fetchBorrowingTrends = async () => {
-    const MIN_LOADING_TIME = 800; // smoother UX (not too long)
+    const MIN_LOADING_TIME = 800;
     const startTime = Date.now();
 
     try {
@@ -95,6 +85,30 @@ const ReportContent = () => {
       } else {
         setTrendLoading(false);
       }
+    }
+  };
+
+  useEffect(() => {
+    fetchKeyMetrics();
+  }, []);
+
+  const fetchKeyMetrics = async () => {
+    try {
+      setLoadingMetrics(true);
+      const response = await reportsApi.getKeyMetrics();
+      console.log("Key Metrics Response", response);
+      const metrics = response.data;
+
+      setKeyMetrics({
+        mostBorrowedGenre: metrics.mostBorrowedGenre ?? "N/A",
+        newThisMonth: metrics.newThisMonth ?? 0,
+        fictionBooks: metrics.fictionBooks ?? 0,
+        avgOverdueDays: metrics.avgOverdueDays ?? 0,
+      });
+    } catch (error) {
+      console.error("Error fetching key metrics:", error);
+    } finally {
+      setLoadingMetrics(false);
     }
   };
 
@@ -164,61 +178,6 @@ const ReportContent = () => {
       .slice(0, 10);
   }, [borrowings]);
 
-  const keyMetrics = useMemo(() => {
-    const genreCount = {};
-    borrowings.forEach((b) => {
-      if (b.book) {
-        const book = books.find((book) => book._id === b.book?._id);
-        if (book && book.category) {
-          genreCount[book.category] = (genreCount[book.category] || 0) + 1;
-        }
-      }
-    });
-
-    const mostBorrowedGenre =
-      Object.entries(genreCount).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-      "None";
-
-    const thisMonth = new Date().getMonth();
-    const thisYear = new Date().getFullYear();
-    const newThisMonth = books.filter((book) => {
-      const createdDate = new Date(book.createdAt);
-      return (
-        createdDate.getMonth() === thisMonth &&
-        createdDate.getFullYear() === thisYear
-      );
-    }).length;
-
-    const overdueBorrowings = borrowings.filter((b) => {
-      if (!b.dueDate || b.status === "Returned") return false;
-      return new Date(b.dueDate) < new Date();
-    });
-
-    const totalOverdueDays = overdueBorrowings.reduce((sum, b) => {
-      const dueDate = new Date(b.dueDate);
-      const today = new Date();
-      const diffTime = today - dueDate;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return sum + Math.max(0, diffDays);
-    }, 0);
-
-    const avgOverdueDays =
-      overdueBorrowings.length > 0
-        ? (totalOverdueDays / overdueBorrowings.length).toFixed(1)
-        : 0;
-
-    return {
-      totalBooks: books.length,
-      totalBorrowings: borrowings.length,
-      activeBorrowings: borrowings.filter((b) => b.status === "Borrowed")
-        .length,
-      mostBorrowedGenre,
-      newThisMonth,
-      avgOverdueDays,
-      fictionBooks: books.filter((b) => b.category === "Fiction").length,
-    };
-  }, [books, borrowings]);
-
   const COLORS = [
     "#0088FE",
     "#00C49F",
@@ -228,20 +187,12 @@ const ReportContent = () => {
     "#82CA9D",
   ];
 
-  const handleExportCSV = () => {
-    console.log("Exporting CSV...");
-  };
-
-  const handleExportPDF = () => {
-    console.log("Exporting PDF...");
-  };
-
   if (loading) {
     return <PageLoader />;
   }
 
   return (
-    <div className="px-[4%] py-[2%]">
+    <div className="px-[4%] py-[2%] flex flex-col gap-4">
       <div className="bg-white rounded-xl shadow-sm border p-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <h2 className="text-xl font-bold text-gray-800">
@@ -278,7 +229,6 @@ const ReportContent = () => {
               ))}
             </div>
 
-            {/* Custom Date Range */}
             <div className="flex gap-2 items-center">
               <span className="text-sm text-gray-500">Custom:</span>
               <input
@@ -308,21 +258,6 @@ const ReportContent = () => {
               />
             </div>
           </div>
-
-          {/* <div className="flex gap-2">
-            <button
-              onClick={handleExportCSV}
-              className="px-4 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600"
-            >
-              CSV
-            </button>
-            <button
-              onClick={handleExportPDF}
-              className="px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600"
-            >
-              PDF
-            </button>
-          </div> */}
         </div>
       </div>
 
@@ -386,55 +321,70 @@ const ReportContent = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 font-medium">
-                Most Borrowed Genre
-              </p>
-              <p className="text-lg font-bold mt-1">
-                {keyMetrics.mostBorrowedGenre}
-              </p>
+        {loadingMetrics || !keyMetrics ? (
+          Array(4)
+            .fill(0)
+            .map((_, i) => (
+              <div
+                key={i}
+                className="h-24 bg-gray-100 rounded-xl animate-pulse"
+              />
+            ))
+        ) : (
+          <>
+            <div className="bg-white rounded-xl shadow-sm border p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 font-medium">
+                    Most Borrowed Genre
+                  </p>
+                  <p className="text-lg font-bold mt-1">
+                    {keyMetrics.mostBorrowedGenre ?? "N/A"}
+                  </p>
+                </div>
+                <BookOpen className="w-8 h-8 text-blue-500" />
+              </div>
             </div>
-            <BookOpen className="w-8 h-8 text-blue-500" />
-          </div>
-        </div>
 
-        <div className="bg-white rounded-xl shadow-sm border p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 font-medium">
-                New This Month
-              </p>
-              <p className="text-lg font-bold mt-1">
-                {keyMetrics.newThisMonth}
-              </p>
+            <div className="bg-white rounded-xl shadow-sm border p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 font-medium">
+                    Monthly Book Additions
+                  </p>
+                  <p className="text-lg font-bold mt-1">
+                    {keyMetrics.newThisMonth ?? "N/A"}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="text-green-600 font-bold">3.2%</div>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-xl shadow-sm border p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 font-medium">Fiction</p>
-              <p className="text-lg font-bold mt-1">
-                {keyMetrics.fictionBooks}
-              </p>
+            <div className="bg-white rounded-xl shadow-sm border p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 font-medium">Fiction</p>
+                  <p className="text-lg font-bold mt-1">
+                    {keyMetrics.fictionBooks ?? "N/A"}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-xl shadow-sm border p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 font-medium">
-                New Users This Month
-              </p>
-              <p className="text-lg font-bold mt-1">3.2</p>
+            <div className="bg-white rounded-xl shadow-sm border p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 font-medium">
+                    Avg. Overdue Days
+                  </p>
+                  <p className="text-lg font-bold mt-1">
+                    {keyMetrics.avgOverdueDays ?? "N/A"}
+                  </p>
+                </div>
+                <Clock className="w-8 h-8 text-red-500" />
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -471,7 +421,6 @@ const ReportContent = () => {
               <div className="flex justify-between">
                 <div>
                   <p className="text-sm text-gray-500">Fiction Readers</p>
-                  <p className="text-lg font-bold">{keyMetrics.fictionBooks}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Avg. Borrows</p>
@@ -552,7 +501,7 @@ const ReportContent = () => {
                   <div>
                     <p className="text-sm text-gray-500">Avg. Overdue Days</p>
                     <p className="text-xl font-bold">
-                      {keyMetrics.avgOverdueDays}
+                      {/* {keyMetrics.avgOverdueDays} */}
                     </p>
                   </div>
                   <Clock className="w-8 h-8 text-orange-500" />

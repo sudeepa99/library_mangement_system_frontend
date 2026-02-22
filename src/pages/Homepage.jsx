@@ -1,10 +1,11 @@
+import { useEffect } from "react";
+
 import NavBar from "../components/NavBar";
 import backgroundImage from "../assets/47892948_logo_make_11_06_2023_141.jpg";
 import tipsIcon from "../assets/Gemini_Generated_Image_5gn81a5gn81a5gn8_upscayl_4x_high-fidelity-4x.jpg";
 import About from "../components/About";
 import DidYouKnow from "../components/DidYouKnow";
 import Contact from "../components/Contact";
-import { useEffect } from "react";
 import { useAuth } from "../contexts/authContext";
 
 const Homepage = () => {

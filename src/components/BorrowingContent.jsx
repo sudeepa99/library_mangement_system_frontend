@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { borrowingApi } from "../api/borrowings";
+
 import PageLoader from "./PageLoader";
 
 const BorrowingContent = () => {
@@ -52,7 +54,7 @@ const BorrowingContent = () => {
 
   const calculateFine = (dueDate) => {
     const overdueDays = calculateOverdueDays(dueDate);
-    return overdueDays * 1; // $1 per day
+    return overdueDays * 1;
   };
 
   const formatDate = (dateString) => {

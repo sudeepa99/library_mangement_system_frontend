@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
 import { authApi } from "../api/auth";
 
 const ProfileDrawer = ({ isOpen, onClose, user, refreshUser }) => {

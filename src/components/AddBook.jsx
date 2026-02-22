@@ -1,6 +1,8 @@
 import { useState } from "react";
-import DialogBox from "./DialogBox";
+
 import { bookApi } from "../api/books";
+
+import DialogBox from "./DialogBox";
 
 const AddBook = ({ isOpen, onClose, refreshBooks }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,11 +21,10 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
         publishedYear: parseInt(formData.publishedYear) || null,
         publisher: formData.publisher || "",
         copies: parseInt(formData.numberOfCopies),
-        availableCopies: parseInt(formData.availableCopies),
+        websiteLink: formData.websiteLink,
       };
 
       const response = await bookApi.addBook(bookData);
-      console.log("Book added successfully:", response);
 
       onClose();
 
@@ -33,7 +34,7 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
     } catch (err) {
       console.error("Error adding book:", err);
       setError(
-        err.response?.data?.message || "Failed to add book. Please try again."
+        err.response?.data?.message || "Failed to add book. Please try again.",
       );
     } finally {
       setIsLoading(false);

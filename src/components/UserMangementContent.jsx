@@ -5,14 +5,16 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import React, { useMemo, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 import viewMoreIcon from "../assets/icons/chevron-down.png";
 import deleteIcon from "../assets/icons/trash.png";
 import editIcon from "../assets/icons/pencil.png";
+import { userApi } from "../api/user";
+
 import EditUser from "./EditUser";
 import DeleteUser from "./DeleteUser";
-import { toast } from "react-toastify";
-import { userApi } from "../api/user";
+import PageLoader from "./PageLoader";
 
 const UserManagementContent = () => {
   const [expanded, setExpanded] = useState({});
@@ -35,7 +37,6 @@ const UserManagementContent = () => {
       setLoading(true);
       setError(null);
       const response = await userApi.getAllUsers();
-      console.log(response);
       setUsers(response.data || []);
     } catch (err) {
       console.error("Error fetching users:", err);
@@ -210,14 +211,7 @@ const UserManagementContent = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading users...</p>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   const openWithLoader = (callback) => {

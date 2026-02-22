@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import PageLoader from "./PageLoader";
 
-import AddCategoryDialog from "./AddCategoryDialog";
-import EditCategoryDialog from "./EditCategoryDialog";
-import DeleteCategoryDialog from "./DeleteCategoryDialog";
-
 import editIcon from "../assets/icons/pencil.png";
 import deleteIcon from "../assets/icons/trash.png";
 import { categoryApi } from "../api/categories";
+
+import AddCategoryDialog from "./AddCategoryDialog";
+import EditCategoryDialog from "./EditCategoryDialog";
+import DeleteCategoryDialog from "./DeleteCategoryDialog";
 
 const CategoryManagementContent = () => {
   const [categories, setCategories] = useState([]);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { categoryApi } from "../api/categories";
 import { toast } from "react-toastify";
+
+import { categoryApi } from "../api/categories";
 
 const AddCategoryDialog = ({ isOpen, onClose, refresh }) => {
   const [name, setName] = useState("");

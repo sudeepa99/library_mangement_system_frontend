@@ -1,11 +1,11 @@
 import { Button } from "@mui/material";
 import { useState } from "react";
-
-import verifyCodeIcon from "../assets/icons/VerifyCode.png";
-import { authApi } from "../api/auth";
 import { toast } from "react-toastify";
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+
+import verifyCodeIcon from "../assets/icons/VerifyCode.png";
+import { authApi } from "../api/auth";
 
 const VerifyCode = () => {
   const [email, setEmail] = useState("");

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { authApi } from "../api/auth";
 import { toast } from "react-toastify";
+
+import { authApi } from "../api/auth";
 import { bookApi } from "../api/books";
 import { borrowingApi } from "../api/borrowings";
+
 import PageLoader from "./PageLoader";
 
 const MemberDashboardContent = () => {
@@ -32,22 +34,6 @@ const MemberDashboardContent = () => {
     fetchUser();
   }, []);
 
-  // useEffect(() => {
-  //   if (userRole === "member") {
-  //     const fetchBooks = async () => {
-  //       try {
-  //         setLoading(true);
-  //         const res = await bookApi.getBooks();
-  //         setBooks(res.data);
-  //       } catch {
-  //         toast.error("Failed to fetch books");
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-  //     fetchBooks();
-  //   }
-  // }, [userRole]);
   const fetchBooks = async () => {
     try {
       const res = await bookApi.getBooks();
@@ -169,7 +155,13 @@ const MemberDashboardContent = () => {
 
                   <button
                     className="w-full py-2 rounded-md border border-gray-300 text-sm hover:bg-gray-300"
-                    onClick={() => window.open(book.moreInfoLink, "_blank")}
+                    onClick={() => {
+                      if (book.websiteLink) {
+                        window.open(book.websiteLink, "_blank");
+                      } else {
+                        toast.info("No website link available for this book");
+                      }
+                    }}
                   >
                     See More
                   </button>

@@ -12,8 +12,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/authContext";
 import { toast } from "react-toastify";
+
+import { useAuth } from "../contexts/authContext";
 import { authApi } from "../api/auth";
 import { validateRegister } from "../validations/validateRegister";
 
@@ -46,9 +47,6 @@ const Register = () => {
     setLoading(true);
     try {
       const res = await authApi.register({ name, email, password, role });
-
-      // authLogin(res.token, res.user);
-
       toast.success("Account Created Successfully");
       navigate("/login");
     } catch (error) {

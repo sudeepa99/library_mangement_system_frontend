@@ -4,17 +4,18 @@ import {
   getExpandedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { toast } from "react-toastify";
 import React, { useMemo, useState, useEffect } from "react";
 
 import viewMoreIcon from "../assets/icons/chevron-down.png";
 import deleteIcon from "../assets/icons/trash.png";
 import editIcon from "../assets/icons/pencil.png";
-import AddBook from "./AddBook";
 import { bookApi } from "../api/books";
+
+import AddBook from "./AddBook";
+import PageLoader from "./PageLoader";
 import EditBook from "./EditBook";
 import DeleteBook from "./DeleteBook";
-import { toast } from "react-toastify";
-import PageLoader from "./PageLoader";
 
 const BookManagementContent = () => {
   const [expanded, setExpanded] = useState({});
@@ -101,7 +102,6 @@ const BookManagementContent = () => {
 
   const tableData = useMemo(() => {
     return books.map((book) => ({
-      // ID: book._id,
       Title: book.title,
       Author: book.author,
       Category: book.category,
@@ -252,9 +252,9 @@ const BookManagementContent = () => {
             </button>
           </div>
         ) : (
-          <div className="max-h-[60vh] overflow-y-auto rounded-lg scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
+          <div className="h-full overflow-y-auto max-h-96 rounded-lg scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
             <table className="min-w-full border-separate border-spacing-y-4 items-center text-center ">
-              <thead>
+              <thead className="sticky top-0 z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="bg-gray-50">
                     {headerGroup.headers.map((header) => (

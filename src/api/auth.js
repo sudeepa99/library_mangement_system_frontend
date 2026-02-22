@@ -12,7 +12,6 @@ export const authApi = {
   register: async (data) => {
     try {
       const response = await api.post("/auth/register", data);
-      console.log("Response", response.data);
       return response.data;
     } catch (error) {
       throw error;

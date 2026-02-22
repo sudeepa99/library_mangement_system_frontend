@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import PageLoader from "./PageLoader";
 import { toast } from "react-toastify";
+
 import { authApi } from "../api/auth";
 import { borrowingApi } from "../api/borrowings";
+
+import PageLoader from "./PageLoader";
 
 const MyBorrowingContent = () => {
   const [borrowings, setBorrowings] = useState([]);
@@ -51,14 +53,10 @@ const MyBorrowingContent = () => {
 
     try {
       setReturningBookId(selectedBorrowing._id);
-      console.log("id", selectedBorrowing._id);
       const response = await borrowingApi.returnBook(selectedBorrowing._id);
-
-      console.log("cnsjsjj", response);
 
       toast.success(response.message || "Book returned successfully!");
 
-      // Refresh the borrowings list
       await fetchUserAndBorrowings();
 
       setShowReturnModal(false);
@@ -78,7 +76,7 @@ const MyBorrowingContent = () => {
 
     const diffTime = Math.abs(today - due);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays * 1; // $1 per day
+    return diffDays * 1;
   };
 
   const getStatusColor = (status) => {
@@ -355,14 +353,12 @@ const MyBorrowingContent = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-start gap-4">
-                        {/* Book Icon/Avatar */}
                         <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
                           <span className="text-2xl font-bold text-white">
                             {borrowing.book.title.charAt(0).toUpperCase()}
                           </span>
                         </div>
 
-                        {/* Book Details */}
                         <div className="flex-1">
                           <h3 className="text-xl font-semibold text-gray-800 mb-1">
                             {borrowing.book.title}
@@ -425,7 +421,6 @@ const MyBorrowingContent = () => {
                             </div>
                           </div>
 
-                          {/* Days Remaining Indicator */}
                           {borrowing.status === "Borrowed" && (
                             <div className="mt-3 flex items-center gap-3 flex-wrap">
                               {isOverdue ? (
@@ -478,7 +473,6 @@ const MyBorrowingContent = () => {
                                 </div>
                               )}
 
-                              {/* Return Book Button */}
                               <button
                                 onClick={() => handleReturnClick(borrowing)}
                                 className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#009B4D] text-white rounded-full text-sm font-medium hover:bg-[#00843f] transition-colors"
@@ -504,7 +498,6 @@ const MyBorrowingContent = () => {
                       </div>
                     </div>
 
-                    {/* Status Badge */}
                     <div className="ml-4">
                       <span
                         className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
@@ -517,7 +510,6 @@ const MyBorrowingContent = () => {
                     </div>
                   </div>
 
-                  {/* Return Date if returned */}
                   {borrowing.status === "returned" &&
                     borrowing.returnedDate && (
                       <div className="mt-4 pt-4 border-t border-gray-100">

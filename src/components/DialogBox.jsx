@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import CloseIcon from "../assets/icons/circle-x.png";
 import { categoryApi } from "../api/categories";
 
@@ -13,7 +14,7 @@ const DialogBox = ({
   initialData = null,
 }) => {
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
   const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ const DialogBox = ({
     publishedYear: "",
     publisher: "",
     numberOfCopies: "",
-    availableCopies: "",
+    websiteLink: "",
   });
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const DialogBox = ({
         publishedYear: "",
         publisher: "",
         numberOfCopies: "",
-        availableCopies: "",
+        websiteLink: "",
       });
     }
   }, [initialData, isOpen]);
@@ -78,7 +79,7 @@ const DialogBox = ({
       publishedYear: "",
       publisher: "",
       numberOfCopies: "",
-      availableCopies: "",
+      websiteLink: "",
     });
   };
 
@@ -222,17 +223,15 @@ const DialogBox = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Available Copies *
+                Website Link
               </label>
               <input
-                type="number"
-                name="availableCopies"
-                value={formData.availableCopies}
+                type="url"
+                name="websiteLink"
+                value={formData.websiteLink || ""}
                 onChange={handleInputChange}
-                required
-                min="0"
-                max={formData.numberOfCopies || undefined}
                 disabled={isLoading}
+                placeholder="https://example.com"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
             </div>

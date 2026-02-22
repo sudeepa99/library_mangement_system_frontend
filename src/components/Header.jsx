@@ -2,13 +2,22 @@ import logo from "../assets/logo Readify.png";
 import searchIcon from "../assets/icons/search.png";
 import notificationIcon from "../assets/icons/bell.png";
 import { useAuth } from "../contexts/authContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileDrawer from "./ProfileDrawer";
 const Header = () => {
   const { user, refreshUser } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
   return (
-    <div className="grid grid-cols-3 items-start px-6 py-4  shadow-md min-w-fit">
+    <div className="grid grid-cols-3 items-center px-6 py-4 shadow-md">
+      {" "}
       <div className="flex items-center">
         <img
           src={logo}
@@ -16,7 +25,6 @@ const Header = () => {
           alt="Readify Logo"
         />
       </div>
-
       <div className="text-center">
         <div className="text-xl font-semibold text-gray-800">
           Welcome Back, {user?.name || "User"}!
@@ -28,30 +36,24 @@ const Header = () => {
           </span>
         </div>
       </div>
-
       <div className="flex items-center justify-end gap-4">
-        <div className="hidden sm:flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 w-48">
-          <img
-            src={searchIcon}
-            className="h-4 w-4 mr-2 text-gray-400"
-            alt="Search"
-          />
-          <input
-            type="text"
-            placeholder="Search"
-            className="flex-1 bg-transparent outline-none text-sm text-gray-700"
-          />
-        </div>
-
         <div className="flex items-center gap-3">
-          <button className="relative p-2 hover:bg-gray-100 rounded-full">
-            <img
-              src={notificationIcon}
-              className="h-5 w-5 text-gray-600"
-              alt="Notifications"
-            />
-            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-          </button>
+          <div className="text-right">
+            <p className="text-sm font-semibold text-gray-700">
+              {currentDate.toLocaleDateString("en-US", {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </p>
+            <p className="text-xs text-gray-500 font-semibold">
+              {currentDate.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}{" "}
+            </p>
+          </div>
 
           <button
             className="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center text-white font-bold"

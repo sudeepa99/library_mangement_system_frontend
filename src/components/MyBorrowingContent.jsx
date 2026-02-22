@@ -53,10 +53,7 @@ const MyBorrowingContent = () => {
 
     try {
       setReturningBookId(selectedBorrowing._id);
-      console.log("id", selectedBorrowing._id);
       const response = await borrowingApi.returnBook(selectedBorrowing._id);
-
-      console.log("cnsjsjj", response);
 
       toast.success(response.message || "Book returned successfully!");
 

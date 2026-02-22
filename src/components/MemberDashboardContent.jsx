@@ -37,7 +37,6 @@ const MemberDashboardContent = () => {
   const fetchBooks = async () => {
     try {
       const res = await bookApi.getBooks();
-      console.log("Books", res);
       setBooks(res.data);
     } catch {
       toast.error("Failed to fetch books");

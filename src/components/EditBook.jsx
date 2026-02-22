@@ -48,7 +48,6 @@ const EditBook = ({ isOpen, onClose, bookData, refreshBooks }) => {
       };
 
       const response = await bookApi.updateBook(bookData._id, updatedBookData);
-      console.log("Book updated successfully:", response);
 
       onClose();
 
@@ -59,7 +58,7 @@ const EditBook = ({ isOpen, onClose, bookData, refreshBooks }) => {
       console.error("Error updating book:", err);
       setError(
         err.response?.data?.message ||
-          "Failed to update book. Please try again."
+          "Failed to update book. Please try again.",
       );
     } finally {
       setIsLoading(false);

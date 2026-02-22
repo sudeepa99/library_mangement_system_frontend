@@ -49,7 +49,6 @@ const ReportContent = () => {
 
       const booksResponse = await bookApi.getBooks();
       const borrowingsResponse = await borrowingApi.getBorrowings();
-      console.log("boroow", borrowingsResponse);
 
       setBooks(booksResponse.data?.data || []);
       setBorrowings(borrowingsResponse.data?.data || []);
@@ -101,7 +100,6 @@ const ReportContent = () => {
     try {
       setLoadingMetrics(true);
       const response = await reportsApi.getKeyMetrics();
-      console.log("Key Metrics Response", response);
       const metrics = response.data;
 
       setKeyMetrics({
@@ -121,7 +119,6 @@ const ReportContent = () => {
     const fetchAnalytics = async () => {
       try {
         const res = await reportsApi.getAnalyticsReport();
-        console.log("data", res);
         setAnalytics(res.data.data);
       } catch (err) {
         console.error(err);

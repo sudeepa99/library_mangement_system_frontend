@@ -13,7 +13,7 @@ const AdminLayout = ({ children }) => {
           <SideBar />
         </div>
 
-        <div className="flex-1 border-2  overflow-y-auto rounded-md shadow-md scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-100 hover:scrollbar-thumb-blue-600">
+        <div className="flex-1 border-2  overflow-y-auto rounded-md shadow-md scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]">
           {children}
         </div>
       </div>

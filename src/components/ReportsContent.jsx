@@ -13,10 +13,12 @@ import {
   Area,
 } from "recharts";
 import { Calendar, TrendingUp, BookOpen, Users, Clock } from "lucide-react";
+
 import { borrowingApi } from "../api/borrowings";
 import { bookApi } from "../api/books";
-import PageLoader from "./PageLoader";
 import { reportsApi } from "../api/reports";
+
+import PageLoader from "./PageLoader";
 
 const ReportContent = () => {
   const [books, setBooks] = useState([]);

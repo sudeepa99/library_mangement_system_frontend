@@ -1,8 +1,8 @@
 import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import logo from "../assets/logo Readify.png";
-import { useEffect, useState } from "react";
 
 const NavBar = () => {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
-import logo from "../assets/logo Readify.png";
-import searchIcon from "../assets/icons/search.png";
-import notificationIcon from "../assets/icons/bell.png";
 import { useAuth } from "../contexts/authContext";
 import { useEffect, useState } from "react";
+
+import logo from "../assets/logo Readify.png";
+
 import ProfileDrawer from "./ProfileDrawer";
 const Header = () => {
   const { user, refreshUser } = useAuth();

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import CloseIcon from "../assets/icons/circle-x.png";
 import { categoryApi } from "../api/categories";
 

@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { LogOut } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import dashboardIcon from "../assets/icons/house.png";
 import booksIcon from "../assets/icons/book-open-check.png";
@@ -6,30 +9,12 @@ import borrowingIcon from "../assets/icons/circle-dot.png";
 import categoriesIcon from "../assets/icons/tag.png";
 import userMngIcon from "../assets/icons/users.png";
 import reportsIcon from "../assets/icons/chart-no-axes-column.png";
-import { useLocation, useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
 import { authApi } from "../api/auth";
-import { toast } from "react-toastify";
 const SideBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("");
   const [userRole, setUserRole] = useState("");
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const res = await authApi.getMe();
-  //       const role = res.data.role;
-  //       setUserRole(role);
-  //       setActiveTab(getActiveTabFromRoute(location.pathname, role));
-  //     } catch {
-  //       setUserRole(null);
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, [location.pathname]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");

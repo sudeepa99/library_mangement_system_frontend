@@ -1,8 +1,8 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { AuthProvider } from "./contexts/authContext";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import PrivateRoute from "./routes/privateRoute";
@@ -20,6 +20,7 @@ import MyBorrowing from "./pages/MyBorrowing";
 import BorrowingHistory from "./pages/BorrowingHistory";
 import LandingRoute from "./routes/landingRoute";
 import Category from "./pages/Category";
+import { AuthProvider } from "./contexts/authContext";
 
 const theme = createTheme({
   palette: {

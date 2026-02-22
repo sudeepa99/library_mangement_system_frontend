@@ -4,17 +4,18 @@ import {
   getExpandedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { toast } from "react-toastify";
 import React, { useMemo, useState, useEffect } from "react";
 
 import viewMoreIcon from "../assets/icons/chevron-down.png";
 import deleteIcon from "../assets/icons/trash.png";
 import editIcon from "../assets/icons/pencil.png";
-import AddBook from "./AddBook";
 import { bookApi } from "../api/books";
+
+import AddBook from "./AddBook";
+import PageLoader from "./PageLoader";
 import EditBook from "./EditBook";
 import DeleteBook from "./DeleteBook";
-import { toast } from "react-toastify";
-import PageLoader from "./PageLoader";
 
 const BookManagementContent = () => {
   const [expanded, setExpanded] = useState({});
@@ -101,7 +102,6 @@ const BookManagementContent = () => {
 
   const tableData = useMemo(() => {
     return books.map((book) => ({
-      // ID: book._id,
       Title: book.title,
       Author: book.author,
       Category: book.category,

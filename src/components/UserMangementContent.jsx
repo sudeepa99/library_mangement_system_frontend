@@ -5,14 +5,15 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import React, { useMemo, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 import viewMoreIcon from "../assets/icons/chevron-down.png";
 import deleteIcon from "../assets/icons/trash.png";
 import editIcon from "../assets/icons/pencil.png";
+import { userApi } from "../api/user";
+
 import EditUser from "./EditUser";
 import DeleteUser from "./DeleteUser";
-import { toast } from "react-toastify";
-import { userApi } from "../api/user";
 import PageLoader from "./PageLoader";
 
 const UserManagementContent = () => {

@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import bookIcon from "../assets/icons/book-open.png";
 import availableCopiesIcon from "../assets/icons/circle-check-big.png";
 import activeBorrowingsIcon from "../assets/icons/clock.png";
@@ -7,11 +10,10 @@ import manageUserIcon from "../assets/icons/users-round.png";
 import borrowingIcon from "../assets/icons/book-open.png";
 import returnIcon from "../assets/icons/corner-down-left.png";
 import addBookIcon from "../assets/icons/book-copy.png";
-import { useEffect, useState } from "react";
 import { dashboardApi } from "../api/dashboard";
-import { toast } from "react-toastify";
-import PageLoader from "./PageLoader";
 import { notificationApi } from "../api/notification";
+
+import PageLoader from "./PageLoader";
 
 const AdminDashboardContent = () => {
   const [stats, setStats] = useState(null);
@@ -189,9 +191,6 @@ const AdminDashboardContent = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-gray-800">Recent Activity</h3>
-            {/* <button className="text-sm text-[#009B4D] hover:text-[#00843f] font-medium">
-              View All →
-            </button> */}
           </div>
 
           <div className="space-y-4">

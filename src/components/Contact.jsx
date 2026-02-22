@@ -1,8 +1,9 @@
+import { Link } from "react-scroll";
+
 import librarySupportIcon from "../assets/Library Support.png";
 import membershipInquiriesIcon from "../assets/Membership Inquiries.png";
 import technicalSupportIcon from "../assets/Technical Support.png";
 import bookDonationsIcon from "../assets/Book Donations.png";
-import { Link } from "react-scroll";
 
 const Contact = () => {
   const contactCards = [

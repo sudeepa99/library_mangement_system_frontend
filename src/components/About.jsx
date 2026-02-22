@@ -3,7 +3,6 @@ const About = () => {
     <div className="font-robotoSlab bg-textColour px-[4%] pt-[5%] ">
       <h1 className="text-5xl text-center mb-[2%]">
         <span>Your</span>
-        {", "}
         <span className="text-greenColour font-bold">Literary Universe</span>
         <span> Perfectly Organized.</span>
       </h1>

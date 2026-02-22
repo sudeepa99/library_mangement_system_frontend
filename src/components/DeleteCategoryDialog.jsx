@@ -1,6 +1,7 @@
 import React from "react";
-import { categoryApi } from "../api/categories";
 import { toast } from "react-toastify";
+
+import { categoryApi } from "../api/categories";
 
 const DeleteCategoryDialog = ({ isOpen, onClose, category, refresh }) => {
   if (!isOpen || !category) return null;

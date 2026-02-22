@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+
 import { userApi } from "../api/user";
 
 const EditUser = ({ isOpen, onClose, userData, refreshUsers }) => {

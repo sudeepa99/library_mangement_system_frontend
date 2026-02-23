@@ -16,6 +16,7 @@ const MemberDashboardContent = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [borrowLoading, setBorrowLoading] = useState(false);
   const [preModalLoading, setPreModalLoading] = useState(false);
+  const [borrowedBookIds, setBorrowedBookIds] = useState([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,18 +44,39 @@ const MemberDashboardContent = () => {
     }
   };
 
+  const fetchUserBorrowings = async () => {
+    try {
+      if (!currentUser?._id) return;
+
+      const res = await borrowingApi.getuserBorrowings(currentUser._id, {
+        status: "Borrowed",
+      });
+      console.log(res);
+
+      const borrowedIds = res.data.map((b) => b.book._id);
+
+      setBorrowedBookIds(borrowedIds);
+    } catch (error) {
+      console.error("Failed to fetch borrowings", error);
+    }
+  };
+
   useEffect(() => {
-    if (userRole !== "member") return;
+    if (userRole !== "member" || !currentUser?._id) return;
 
     setLoading(true);
-    fetchBooks().finally(() => setLoading(false));
+
+    Promise.all([fetchBooks(), fetchUserBorrowings()]).finally(() =>
+      setLoading(false),
+    );
 
     const intervalId = setInterval(() => {
       fetchBooks();
+      fetchUserBorrowings();
     }, 10000);
 
     return () => clearInterval(intervalId);
-  }, [userRole]);
+  }, [userRole, currentUser]);
 
   const createBorrowing = async (bookId) => {
     try {
@@ -62,9 +84,12 @@ const MemberDashboardContent = () => {
         toast.error("User not loaded");
         return;
       }
+
       const payload = { user: currentUser._id, book: bookId };
       const response = await borrowingApi.createBorrowing(payload);
+
       toast.success(response.message);
+
       return response;
     } catch (error) {
       toast.error(error?.response?.data?.error);
@@ -76,7 +101,12 @@ const MemberDashboardContent = () => {
 
     try {
       setBorrowLoading(true);
+
       await createBorrowing(selectedBook._id);
+
+      await fetchUserBorrowings();
+      await fetchBooks();
+
       setShowConfirmModal(false);
       setSelectedBook(null);
     } finally {
@@ -96,8 +126,8 @@ const MemberDashboardContent = () => {
       <div className="flex-1 px-4 overflow-y-auto  scrollbar-thin scrollbar-thumb-[#8C92AC] scrollbar-track-gray-200 hover:scrollbar-thumb-[#00843f]   ">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {books.map((book) => {
-            const isAvailable = book.availableCopies > 0;
-
+            const isAlreadyBorrowed = borrowedBookIds.includes(book._id);
+            const isAvailable = book.availableCopies > 0 && !isAlreadyBorrowed;
             return (
               <div
                 key={book._id}
@@ -150,7 +180,11 @@ const MemberDashboardContent = () => {
                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                     }`}
                   >
-                    Borrow
+                    {isAlreadyBorrowed
+                      ? "Already Borrowed"
+                      : isAvailable
+                        ? "Borrow"
+                        : "Not Available"}{" "}
                   </button>
 
                   <button

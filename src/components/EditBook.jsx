@@ -20,6 +20,7 @@ const EditBook = ({ isOpen, onClose, bookData, refreshBooks }) => {
         publisher: bookData.publisher || "",
         numberOfCopies: bookData.copies?.toString() || "",
         availableCopies: bookData.availableCopies?.toString() || "",
+        websiteLink: bookData.websiteLink || "",
       });
     }
   }, [isOpen, bookData]);

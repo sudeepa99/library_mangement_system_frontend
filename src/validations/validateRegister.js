@@ -16,10 +16,6 @@ export const validateRegister = ({ name, email, password, role }) => {
     }
   }
 
-  if (!role) {
-    errors.role = "Role is required";
-  }
-
   if (!password) {
     errors.password = "Password is required";
   } else if (password.length < 6) {

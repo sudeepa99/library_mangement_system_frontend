@@ -2,13 +2,9 @@ import {
   Box,
   Button,
   Container,
-  FormControl,
   IconButton,
   InputAdornment,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -24,7 +20,6 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("librarian");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +33,6 @@ const Register = () => {
       name,
       email,
       password,
-      role,
     });
 
     if (Object.keys(validationErrors).length > 0) {
@@ -48,7 +42,7 @@ const Register = () => {
     setErrors({});
     setLoading(true);
     try {
-      const res = await authApi.register({ name, email, password, role });
+      const res = await authApi.register({ name, email, password });
       toast.success("Account Created Successfully");
       navigate("/login");
     } catch (error) {
@@ -89,23 +83,6 @@ const Register = () => {
             error={!!errors.email}
             helperText={errors.email}
           />
-          <FormControl fullWidth margin="normal" required error={!!errors.role}>
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              labelId="role-label"
-              value={role}
-              label="Role"
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <MenuItem value="member">Member</MenuItem>
-              <MenuItem value="librarian">Librarian</MenuItem>
-            </Select>
-            {errors.role && (
-              <Typography variant="caption" color="error">
-                {errors.role}
-              </Typography>
-            )}
-          </FormControl>
           <TextField
             label="Password"
             type={showPassword ? "text" : "password"}

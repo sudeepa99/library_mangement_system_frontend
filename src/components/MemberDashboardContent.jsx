@@ -51,9 +51,10 @@ const MemberDashboardContent = () => {
       const res = await borrowingApi.getuserBorrowings(currentUser._id, {
         status: "Borrowed",
       });
-      console.log(res);
 
-      const borrowedIds = res.data.map((b) => b.book._id);
+      const borrowedIds = res.data
+        .filter((b) => b.status === "Borrowed")
+        .map((b) => b.book._id);
 
       setBorrowedBookIds(borrowedIds);
     } catch (error) {

@@ -25,7 +25,11 @@ const MyBorrowingContent = () => {
         userRes.data._id,
       );
 
-      setBorrowings(borrowingsRes.data);
+      const activeBorrowings = borrowingsRes.data.filter(
+        (b) => b.status === "Borrowed",
+      );
+
+      setBorrowings(activeBorrowings);
     } catch (error) {
       toast.error("Failed to fetch borrowings");
       console.error(error);

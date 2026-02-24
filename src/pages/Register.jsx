@@ -2,19 +2,17 @@ import {
   Box,
   Button,
   Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
+  IconButton,
+  InputAdornment,
   Paper,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useAuth } from "../contexts/authContext";
 import { authApi } from "../api/auth";
 import { validateRegister } from "../validations/validateRegister";
 
@@ -22,11 +20,10 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("librarian");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { login: authLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -36,7 +33,6 @@ const Register = () => {
       name,
       email,
       password,
-      role,
     });
 
     if (Object.keys(validationErrors).length > 0) {
@@ -46,7 +42,7 @@ const Register = () => {
     setErrors({});
     setLoading(true);
     try {
-      const res = await authApi.register({ name, email, password, role });
+      const res = await authApi.register({ name, email, password });
       toast.success("Account Created Successfully");
       navigate("/login");
     } catch (error) {
@@ -87,26 +83,9 @@ const Register = () => {
             error={!!errors.email}
             helperText={errors.email}
           />
-          <FormControl fullWidth margin="normal" required error={!!errors.role}>
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              labelId="role-label"
-              value={role}
-              label="Role"
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <MenuItem value="member">Member</MenuItem>
-              <MenuItem value="librarian">Librarian</MenuItem>
-            </Select>
-            {errors.role && (
-              <Typography variant="caption" color="error">
-                {errors.role}
-              </Typography>
-            )}
-          </FormControl>
           <TextField
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             fullWidth
             margin="normal"
             variant="outlined"
@@ -115,6 +94,18 @@ const Register = () => {
             required
             error={!!errors.password}
             helperText={errors.password}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
 
           <Button

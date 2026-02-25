@@ -3,6 +3,7 @@ import { useState } from "react";
 import { bookApi } from "../api/books";
 
 import DialogBox from "./DialogBox";
+import { toast } from "react-toastify";
 
 const AddBook = ({ isOpen, onClose, refreshBooks }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +26,7 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
       };
 
       const response = await bookApi.addBook(bookData);
+      toast.success(response.message);
 
       onClose();
 
@@ -36,6 +38,7 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
       setError(
         err.response?.data?.message || "Failed to add book. Please try again.",
       );
+      toast.error(err);
     } finally {
       setIsLoading(false);
     }

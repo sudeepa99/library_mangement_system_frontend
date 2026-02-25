@@ -27,7 +27,6 @@ const AddBook = ({ isOpen, onClose, refreshBooks }) => {
 
       const response = await bookApi.addBook(bookData);
       toast.success(response.message);
-      console.log(response);
 
       onClose();
 
